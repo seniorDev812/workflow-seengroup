@@ -9,7 +9,11 @@ async function forward(request: NextRequest, paramsPromise: Promise<{ path: stri
   const { path } = await paramsPromise;
   const pathname = path.join('/');
 
-  const url = `${BACKEND_URL}/api/${pathname}${request.nextUrl.search}`;
+  // Static assets like uploads are served at BACKEND_URL/uploads, not under /api
+  const isStaticUpload = pathname.startsWith('uploads/');
+  const url = isStaticUpload
+    ? `${BACKEND_URL}/${pathname}${request.nextUrl.search}`
+    : `${BACKEND_URL}/api/${pathname}${request.nextUrl.search}`;
 
   const headers = new Headers();
   const incomingHeaders = request.headers;

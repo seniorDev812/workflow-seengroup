@@ -165,11 +165,37 @@ export default function AdminProductsPage() {
   // Bulk operations state
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const [selectAll, setSelectAll] = useState(false);
+  // Normalize image URLs to a browser-loadable path
+  const getDisplayImageUrl = useCallback((url?: string) => {
+    if (!url) return '';
+    try {
+      const parsed = new URL(url, window.location.origin);
+      const pathname = parsed.pathname || '';
+      if (pathname.startsWith('/uploads/')) {
+        return `/api/proxy${pathname}`;
+      }
+      return parsed.toString();
+    } catch {
+      // If it's a plain relative path
+      if (url.startsWith('/uploads/')) return `/api/proxy${url}`;
+      return url;
+    }
+  }, []);
+
 
   const selectedCategory = useMemo(
     () => categories.find((c) => c.id === selectedCategoryId) || null,
     [categories, selectedCategoryId]
   );
+
+  // Backend expects DELETE /api/admin/products?id=...
+  const deleteProductViaProxy = useCallback(async (productId: string): Promise<Response> => {
+    const res = await fetch(`/api/proxy/admin/products?id=${encodeURIComponent(productId)}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+    return res;
+  }, []);
 
   // Bulk operations functions
   const handleSelectProduct = (productId: string) => {
@@ -199,12 +225,7 @@ export default function AdminProductsPage() {
     
     if (confirm(`Are you sure you want to archive ${selectedProducts.size} selected products? This will hide them from public listings but preserve all data.`)) {
       try {
-        const deletePromises = Array.from(selectedProducts).map(id =>
-          fetch(`/api/admin/proxy/products/${id}`, {
-            method: 'DELETE',
-            credentials: 'include',
-          })
-        );
+        const deletePromises = Array.from(selectedProducts).map(id => deleteProductViaProxy(id));
         
         await Promise.all(deletePromises);
         
@@ -234,7 +255,7 @@ export default function AdminProductsPage() {
     if (confirm(`Are you sure you want to ${action} ${selectedProducts.size} selected products?`)) {
       try {
         const updatePromises = Array.from(selectedProducts).map(id =>
-          fetch(`/api/admin/proxy/products/${id}`, {
+          fetch(`/api/proxy/admin/products/${id}`, {
             method: 'PATCH',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -274,7 +295,7 @@ export default function AdminProductsPage() {
         return;
       }
 
-      const response = await fetch(`/api/admin/proxy/categories`, {
+      const response = await fetch(`/api/proxy/admin/categories`, {
         credentials: 'include',
       });
       if (response.ok) {
@@ -316,7 +337,7 @@ export default function AdminProductsPage() {
     try {
       const startTime = performance.now();
       
-      const response = await fetch(`/api/admin/proxy/products?categoryId=${selectedCategoryId}`, {
+      const response = await fetch(`/api/proxy/admin/products?categoryId=${selectedCategoryId}`, {
         credentials: 'include',
       });
       
@@ -475,7 +496,7 @@ export default function AdminProductsPage() {
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/admin/proxy/categories`, {
+      const response = await fetch(`/api/proxy/admin/categories`, {
         method: "DELETE",
         credentials: 'include',
         headers: { 
@@ -536,7 +557,7 @@ export default function AdminProductsPage() {
       imageUrl: product.imageUrl || "",
     });
     setSelectedImage(null);
-    setImagePreview(product.imageUrl || "");
+    setImagePreview(getDisplayImageUrl(product.imageUrl || ""));
     setProductModalOpen(true);
   };
 
@@ -561,7 +582,20 @@ export default function AdminProductsPage() {
 
         if (uploadResponse.ok) {
           const uploadData = await uploadResponse.json();
-          imageUrl = uploadData.data.url;
+          const rawUrl = (uploadData && uploadData.data && uploadData.data.url) || uploadData?.url || '';
+
+          // Normalize to a safe, same-origin URL (via proxy) to avoid mixed content/CORS issues
+          const toProxyUrl = (u: string) => {
+            try {
+              const parsed = new URL(u, window.location.origin);
+              const pathname = parsed.pathname || '';
+              return pathname.startsWith('/uploads/') ? `/api/proxy${pathname}` : parsed.toString();
+            } catch {
+              return u;
+            }
+          };
+
+          imageUrl = toProxyUrl(rawUrl);
         } else {
           const errorData = await uploadResponse.json();
           notifications.show({
@@ -574,8 +608,8 @@ export default function AdminProductsPage() {
       }
 
       const url = editingProduct 
-        ? `/api/admin/proxy/products` 
-        : `/api/admin/proxy/products`;
+        ? `/api/proxy/admin/products` 
+        : `/api/proxy/admin/products`;
       const method = editingProduct ? "PUT" : "POST";
       
       const productData = editingProduct ? {
@@ -650,10 +684,7 @@ export default function AdminProductsPage() {
     try {
       const startTime = performance.now();
       
-      const response = await fetch(`/api/admin/proxy/products?id=${productId}`, {
-        method: "DELETE",
-        credentials: 'include',
-      });
+      const response = await deleteProductViaProxy(productId);
 
       const endTime = performance.now();
       const deleteTime = endTime - startTime;
@@ -858,7 +889,7 @@ export default function AdminProductsPage() {
                           <Table.Td>
                             {p.imageUrl ? (
                               <img 
-                                src={p.imageUrl} 
+                                src={getDisplayImageUrl(p.imageUrl)} 
                                 alt={p.name} 
                                 style={{ 
                                   width: 48, 
