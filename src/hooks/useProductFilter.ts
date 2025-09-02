@@ -50,6 +50,7 @@ export interface UseProductFilterReturn {
   openProductModal: (product: ProductFilter) => void;
   closeModal: () => void;
   clearAllFilters: () => void;
+  switchToCategory: (categoryId: string) => void;
   getActiveFilterCount: () => number;
   refreshData: () => Promise<void>;
 }
@@ -261,19 +262,40 @@ export const useProductFilter = (): UseProductFilterReturn => {
     });
   }, [debouncedSearch, saveToLocalStorage, viewMode, activeAccordion, activeFilters]);
 
-  // Handle filter changes
+  // Handle filter changes with exclusive category selection
   const handleFilterChange = useCallback((category: keyof FilterState, value: string, checked: boolean) => {
     setActiveFilters(prev => {
       const newFilters = { ...prev };
       
       if (checked) {
-        // Add value to category
-        if (!newFilters[category].includes(value)) {
-          newFilters[category] = [...newFilters[category], value];
+        // For category selection, implement exclusive behavior
+        if (category === 'auxiliary' && value !== 'Show All') {
+          // When selecting a specific category, clear all other category selections
+          // This ensures only one category is active at a time
+          newFilters.auxiliary = [value]; // Only the selected category
+          newFilters.components = [];     // Clear components
+          newFilters.products = [];       // Clear products  
+          newFilters.parts = [];          // Clear parts
+        } else if (category === 'auxiliary' && value === 'Show All') {
+          // When "Show All" is selected, clear all specific category selections
+          newFilters.auxiliary = ['Show All'];
+          newFilters.components = [];
+          newFilters.products = [];
+          newFilters.parts = [];
+        } else {
+          // For non-category filters, add value normally
+          if (!newFilters[category].includes(value)) {
+            newFilters[category] = [...newFilters[category], value];
+          }
         }
       } else {
         // Remove value from category
         newFilters[category] = newFilters[category].filter(v => v !== value);
+        
+        // If removing the last item from auxiliary, default to "Show All"
+        if (category === 'auxiliary' && newFilters.auxiliary.length === 0) {
+          newFilters.auxiliary = ['Show All'];
+        }
       }
       
       // Save to localStorage immediately
@@ -316,7 +338,7 @@ export const useProductFilter = (): UseProductFilterReturn => {
   // Clear all filters
   const clearAllFilters = useCallback(() => {
     const emptyFilters = {
-      auxiliary: [],
+      auxiliary: ['Show All'], // Default to "Show All" instead of empty
       components: [],
       products: [],
       parts: []
@@ -334,6 +356,26 @@ export const useProductFilter = (): UseProductFilterReturn => {
       filters: emptyFilters
     });
   }, [saveToLocalStorage, viewMode, activeAccordion]);
+
+  // Switch to a specific category (exclusive selection)
+  const switchToCategory = useCallback((categoryId: string) => {
+    const newFilters = {
+      auxiliary: [categoryId],
+      components: [],
+      products: [],
+      parts: []
+    };
+    
+    setActiveFilters(newFilters);
+    
+    // Save to localStorage immediately
+    saveToLocalStorage({
+      search: searchQuery,
+      viewMode,
+      accordion: activeAccordion,
+      filters: newFilters
+    });
+  }, [saveToLocalStorage, searchQuery, viewMode, activeAccordion]);
 
   // Get active filter count
   const getActiveFilterCount = useCallback(() => {
@@ -436,6 +478,7 @@ export const useProductFilter = (): UseProductFilterReturn => {
     openProductModal,
     closeModal,
     clearAllFilters,
+    switchToCategory,
     getActiveFilterCount,
     refreshData,
   };

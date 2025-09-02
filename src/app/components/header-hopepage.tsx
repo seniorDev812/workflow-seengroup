@@ -359,7 +359,7 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
                                         </div>
                                         <div className="copyright-field flex items-center justify-center">
                                             <p className="text text-[16px] xsm:text-14 font-normal text-white/60 [&_a]:duration-350 [&_a:hover]:text-primary md:text-center">
-                                                Â©2025 <Link href="/" className="uppercase">Seen Group</Link> | All Right reserved
+                                                 <Link href="/" className="uppercase">Seen Group</Link> | All Right reserved
                                             </p>
                                         </div>
                                     </div>

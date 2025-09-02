@@ -25,6 +25,7 @@ import {
   CheckCircle,
   Package,
   Trash2,
+  Trash,
   Plus,
   Loader2,
   Send,
@@ -75,6 +76,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; size?: n
   'icon-check': CheckCircle,
   'icon-package': Package,
   'icon-trash': Trash2,
+  'icon-trash-delete': Trash, // Alternative trash icon for consistency
   'icon-plus': Plus,
   'icon-spinner': Loader2,
   'icon-send': Send,

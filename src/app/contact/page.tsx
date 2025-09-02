@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Icon from "../components/ui/Icon";
@@ -13,6 +13,25 @@ export default function ContactPage() {
     // Refs for performance optimization
     const tickingRef = useRef(false);
     const styleRef = useRef<HTMLStyleElement | null>(null);
+
+    // Utility function to restore scroll functionality
+    const restoreScroll = useCallback(() => {
+        // Remove any conflicting body styles that might block scrolling
+        if (document.body.style.position === 'fixed') {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+        }
+        
+        // Ensure smooth scrolling is enabled
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'auto';
+        }
+        
+        // Force a reflow to ensure styles are applied
+        document.body.offsetHeight;
+    }, []);
 
     // Scroll-based header background management for contact page
     useEffect(() => {
@@ -33,6 +52,16 @@ export default function ContactPage() {
                 }
                 .header-bottom.bg-transparent {
                     background-color: transparent !important;
+                }
+                /* Ensure smooth scrolling */
+                html {
+                    scroll-behavior: smooth;
+                }
+                /* Prevent scroll conflicts */
+                body.menu-open {
+                    overflow: hidden !important;
+                    position: fixed !important;
+                    width: 100% !important;
                 }
             `;
             document.head.appendChild(style);
@@ -140,6 +169,9 @@ export default function ContactPage() {
         // Start initialization after a short delay to ensure DOM is ready
         const initTimer = setTimeout(initializeHeaderBackground, 100);
 
+        // Call scroll restoration to fix any existing conflicts
+        restoreScroll();
+
         // Cleanup function
         return () => {
             clearTimeout(initTimer);
@@ -160,8 +192,29 @@ export default function ContactPage() {
                 (headerBottom as HTMLElement).style.removeProperty('background-color');
                 (headerBottom as HTMLElement).style.removeProperty('transition');
             }
+
+            // Restore scroll functionality
+            restoreScroll();
         };
-    }, []); // Empty dependency array - runs once on mount
+    }, [restoreScroll]); // Empty dependency array - runs once on mount
+
+    // Handle page visibility changes to restore scroll
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                // Page became visible, restore scroll functionality
+                setTimeout(() => {
+                    restoreScroll();
+                }, 100);
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, [restoreScroll]);
 
     return (
         <>

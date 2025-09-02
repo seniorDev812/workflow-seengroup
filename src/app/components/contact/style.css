@@ -310,7 +310,7 @@
     box-shadow: 0 0 0 2px rgba(246, 148, 30, 0.1);
 }
 
-/* Table Buttons */
+/* Table Buttons - ensure consistency with remove-row-btn */
 .seen-contact-remove-row-btn {
     background: var(--error-color);
     color: white;
@@ -325,11 +325,29 @@
     justify-content: center;
     min-width: 32px;
     height: 32px;
+    /* Ensure consistent icon rendering */
+    line-height: 1;
+    vertical-align: middle;
 }
 
 .seen-contact-remove-row-btn:hover {
     background: #DC2626;
     transform: scale(1.05);
+}
+
+/* Ensure consistent icon display across all remove buttons */
+.seen-contact-remove-row-btn svg {
+    display: block !important;
+    width: 14px !important;
+    height: 14px !important;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    /* Force consistent rendering */
+    shape-rendering: geometricPrecision;
+    text-rendering: optimizeLegibility;
 }
 
 .seen-contact-add-row-btn {
@@ -677,7 +695,7 @@
     font-weight: 500;
 }
 
-/* Remove row button styles */
+/* Remove row button styles - ensure consistency */
 .remove-row-btn {
     background: var(--error-color);
     color: white;
@@ -692,11 +710,29 @@
     justify-content: center;
     min-width: 32px;
     height: 32px;
+    /* Ensure consistent icon rendering */
+    line-height: 1;
+    vertical-align: middle;
 }
 
 .remove-row-btn:hover {
     background: #DC2626;
     transform: scale(1.05);
+}
+
+/* Ensure consistent icon display across all remove buttons */
+.remove-row-btn svg {
+    display: block !important;
+    width: 14px !important;
+    height: 14px !important;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    /* Force consistent rendering */
+    shape-rendering: geometricPrecision;
+    text-rendering: optimizeLegibility;
 }
 
 /* Table row animations */
@@ -766,6 +802,20 @@
 .pre-filled-product {
     background: rgba(246, 148, 30, 0.05);
     border-left: 3px solid var(--accent-color);
+}
+
+/* Ensure consistent icon rendering in pre-filled rows */
+.pre-filled-product .remove-row-btn svg {
+    display: block !important;
+    width: 14px !important;
+    height: 14px !important;
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+    shape-rendering: geometricPrecision;
+    text-rendering: optimizeLegibility;
 }
 
 .pre-filled-product input[readonly] {

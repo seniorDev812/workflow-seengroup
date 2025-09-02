@@ -14,11 +14,24 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
-        // Prevent body scroll when menu is open
+        // Improved body scroll management to prevent scrolling issues
         if (!isMenuOpen) {
+            // When opening menu, preserve scroll position and prevent body scroll
+            const scrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
             document.body.style.overflow = 'hidden';
         } else {
-            document.body.style.overflow = 'unset';
+            // When closing menu, restore body scroll and position
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
         }
     };
 
@@ -120,7 +133,7 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
                         </li>
                  
                                         <li className="group/menu-item drop-fax lg:relative lg:w-full duration-450">
-                                            <Link href="/product" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 gap-20 sm:gap-10">
+                                            <Link href="/product?view=grid&accordion=auxiliary&auxiliary=Show+All" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 gap-20 sm:gap-10">
                                                 <div className="title-field flex w-max relative">
                                                     <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-[&.active]/menu-item:text-primary group-hover/menu-item:text-primary">Products</span>
                                                 
@@ -209,7 +222,7 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
                                         </div>
                                         <div className="copyright-field flex items-center justify-center">
                                             <p className="text text-[16px] xsm:text-14 font-normal text-white/60 [&_a]:duration-350 [&_a:hover]:text-primary md:text-center">
-                                                Â©2025 <Link href="/" className="uppercase">Seen Group</Link> | All Right reserved
+                                                 <Link href="/" className="uppercase">Seen Group</Link> | All Right reserved
                                             </p>
                                         </div>
                                     </div>

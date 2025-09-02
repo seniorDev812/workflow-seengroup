@@ -79,6 +79,8 @@ export const FilterAccordion: React.FC<FilterAccordionProps> = ({
           </span>
         </div>
         
+    
+        
         <ul className="sei-checkbox-list" role="group" aria-label={`${title} filters`}>
           <li>
             <label style={{ color: '#949ca3', fontWeight: 'bold' }}>
@@ -89,14 +91,10 @@ export const FilterAccordion: React.FC<FilterAccordionProps> = ({
                 checked={activeFilters[category].includes('Show All')}
                 onChange={(e) => {
                   if (e.target.checked) {
-                    // When "Show All" is checked, clear all other category selections
-                    // First, uncheck all other categories
-                    categories?.forEach(cat => {
-                      if (activeFilters[category].includes(cat.id)) {
-                        onFilterChange(category, cat.id, false);
-                      }
-                    });
-                    // Then check "Show All"
+                    // When "Show All" is checked, the handleFilterChange will automatically:
+                    // 1. Clear all specific category selections
+                    // 2. Set "Show All" as active
+                    // 3. Clear all other filter types
                     onFilterChange(category, 'Show All', true);
                   } else {
                     // When "Show All" is unchecked, just remove it
@@ -122,14 +120,13 @@ export const FilterAccordion: React.FC<FilterAccordionProps> = ({
                     checked={activeFilters[category].includes(cat.id)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        // When a category is checked, uncheck "Show All"
-                        if (activeFilters[category].includes('Show All')) {
-                          onFilterChange(category, 'Show All', false);
-                        }
-                        // Then check the selected category
+                        // When a category is checked, the handleFilterChange will automatically:
+                        // 1. Clear all other category selections
+                        // 2. Set only this category as active
+                        // 3. Clear all other filter types
                         onFilterChange(category, cat.id, true);
                       } else {
-                        // When a category is unchecked, just remove it
+                        // When a category is unchecked, remove it and default to "Show All"
                         onFilterChange(category, cat.id, false);
                       }
                     }}
