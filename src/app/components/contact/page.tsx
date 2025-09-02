@@ -209,6 +209,11 @@ export default function Contact() {
             if (invalidProducts) {
                 newErrors.products = 'Please fill in all product details (name, lead time, and quantity)';
             }
+            
+            // When product is pre-selected, ensure it's the only product requirement
+            if (productData && productRequirements.length > 1) {
+                newErrors.products = 'Only one product can be inquired about at a time';
+            }
         }
 
         setErrors(newErrors);
@@ -530,12 +535,21 @@ export default function Contact() {
                             <div className="seen-contact-form-section">
                                 <h2 className="seen-contact-section-title">
                                     <Icon name="icon-package" className="text-orange-500" size={16} />
-                                    Product Requirements
+                                    {productData ? 'Product Inquiry' : 'Product Requirements'}
                                 </h2>
+                                
+                                {/* Show context message when product is pre-selected */}
+                                {productData && (
+                                    <p className="seen-contact-section-subtitle">
+                                        You're inquiring about: <strong>{productData.name}</strong>
+                                        <br />
+                                        <small>Please fill in the lead time and quantity details below.</small>
+                                    </p>
+                                )}
 
                                 <div className="seen-contact-table-container">
                                     <table
-                                        className="seen-contact-requirements-table"
+                                        className={`seen-contact-requirements-table ${productData ? 'single-product' : ''}`}
                                         id="requirements-table"
                                     >
                                         <thead>
@@ -600,15 +614,18 @@ export default function Contact() {
                                         </tbody>
                                     </table>
 
-                                    <button
-                                        type="button"
-                                        className="seen-contact-add-row-btn"
-                                        id="add-row-btn"
-                                        onClick={addEmptyRow}
-                                    >
-                                        <Icon name="icon-plus" size={16} />
-                                        Add Another Item
-                                    </button>
+                                    {/* Only show "Add Another Item" button when no product is pre-selected */}
+                                    {!productData && (
+                                        <button
+                                            type="button"
+                                            className="seen-contact-add-row-btn"
+                                            id="add-row-btn"
+                                            onClick={addEmptyRow}
+                                        >
+                                            <Icon name="icon-plus" size={16} />
+                                            Add Another Item
+                                        </button>
+                                    )}
                                 </div>
                                 {errors.products && <div className="seen-contact-error-message">{errors.products}</div>}
                             </div>
