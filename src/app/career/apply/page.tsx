@@ -1,9 +1,10 @@
 ﻿"use client";
 
 import React, { useState, useEffect, Suspense } from 'react';
+import Icon from '../../components/ui/Icon';
+import '../../components/contact/style.css';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-import Icon from '../../components/ui/Icon';
 import '../../components/career/style.css';
 
 interface Job {
@@ -35,6 +36,17 @@ function CareerApplyContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [notifications, setNotifications] = useState<Array<{ id: string; type: 'success' | 'error' | 'info'; message: string; duration?: number }>>([]);
+
+  const addNotification = (type: 'success' | 'error' | 'info', message: string, duration = 5000) => {
+    const id = Date.now().toString();
+    setNotifications((prev) => [...prev, { id, type, message, duration }]);
+    setTimeout(() => removeNotification(id), duration);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  };
 
   useEffect(() => {
     const fetchJobDetails = async () => {
@@ -98,14 +110,15 @@ function CareerApplyContent() {
 
       if (response.ok && result.success) {
         const jobTitle = job?.title || 'the position';
-        alert(`Application submitted successfully for ${jobTitle}! We will contact you soon.`);
-        router.push('/career');
+        addNotification('success', `Application submitted successfully for ${jobTitle}! We will contact you soon.`);
+        // Allow the user to see the notification before navigating away
+        setTimeout(() => router.push('/career'), 1200);
       } else {
         const msg = result?.error || result?.message || `Failed to submit application (status ${response.status}).`;
-        alert(msg);
+        addNotification('error', msg);
       }
     } catch (err) {
-      alert('Network error while submitting your application. Please try again.');
+      addNotification('error', 'Network error while submitting your application. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -145,6 +158,24 @@ function CareerApplyContent() {
 
   return (
     <>
+      {/* Notification Container */}
+      <div className="notification-container">
+        {notifications.map((n) => (
+          <div key={n.id} className={`notification notification-${n.type} show`} onClick={() => removeNotification(n.id)}>
+            <div className="notification-icon">
+              {n.type === 'success' && <Icon name="icon-check" size={16} />}
+              {n.type === 'error' && <Icon name="icon-alert" size={16} />}
+              {n.type === 'info' && <Icon name="icon-spinner" className="animate-spin" size={16} />}
+            </div>
+            <div className="notification-content">
+              <div className="notification-message">{n.message}</div>
+            </div>
+            <button className="notification-close" onClick={(e) => { e.stopPropagation(); removeNotification(n.id); }}>
+              <Icon name="icon-cross" size={12} />
+            </button>
+          </div>
+        ))}
+      </div>
    
       
       <div className="application-page">

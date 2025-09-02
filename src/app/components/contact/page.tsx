@@ -330,7 +330,7 @@ export default function Contact() {
                         <div className="notification-icon">
                             {notification.type === 'success' && <Icon name="icon-check" size={16} />}
                             {notification.type === 'error' && <Icon name="icon-alert" size={16} />}
-                            {notification.type === 'info' && <Icon name="icon-info" size={16} />}
+                            {notification.type === 'info' && <Icon name="icon-spinner" className="animate-spin" size={16} />}
                         </div>
                         <div className="notification-content">
                             <div className="notification-message">{notification.message}</div>
@@ -342,7 +342,7 @@ export default function Contact() {
                                 removeNotification(notification.id);
                             }}
                         >
-                            Ã—
+                            <Icon name="icon-cross" size={12} />
                         </button>
                     </div>
                 ))}
@@ -591,8 +591,8 @@ export default function Contact() {
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <button type="button" className="remove-row-btn" onClick={() => removeRow(req.id)}>
-                                                            ðŸ—‘ï¸
+                                                        <button type="button" className="remove-row-btn" onClick={() => removeRow(req.id)} aria-label="Remove row">
+                                                            <Icon name="icon-trash" size={14} />
                                                         </button>
                                                     </td>
                                                 </tr>
