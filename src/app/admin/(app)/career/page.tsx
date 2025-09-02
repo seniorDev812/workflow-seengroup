@@ -149,6 +149,9 @@ export default function CareerManagement() {
   // Job modal state
   const [jobModalOpen, setJobModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
+  // Read-only job details modal state
+  const [jobDetailsOpen, setJobDetailsOpen] = useState(false);
+  const [viewJob, setViewJob] = useState<Job | null>(null);
   const [jobForm, setJobForm] = useState({
     title: '',
     description: '',
@@ -461,6 +464,11 @@ export default function CareerManagement() {
       isActive: job.isActive
     });
     setJobModalOpen(true);
+  };
+
+  const openJobDetails = (job: Job) => {
+    setViewJob(job);
+    setJobDetailsOpen(true);
   };
 
   const saveJob = async () => {
@@ -927,7 +935,7 @@ export default function CareerManagement() {
                         <Menu.Dropdown>
                           <Menu.Item 
                             leftSection={<IconEye size={16} />}
-                            onClick={() => { /* setJobToView(job); setJobDetailsOpen(true); */ }}
+                            onClick={() => openJobDetails(job)}
                           >
                             View Details
                           </Menu.Item>
@@ -1264,6 +1272,64 @@ export default function CareerManagement() {
                 Send Email
               </Button>
             </Group>
+          </Stack>
+        )}
+      </Modal>
+
+      {/* Read-only Job Details Modal */}
+      <Modal
+        opened={jobDetailsOpen}
+        onClose={() => setJobDetailsOpen(false)}
+        title="Job Details"
+        size="lg"
+        centered
+      >
+        {viewJob && (
+          <Stack>
+            <Title order={3}>{viewJob.title}</Title>
+            <Group>
+              {viewJob.department && (
+                <Badge>{viewJob.department}</Badge>
+              )}
+              {viewJob.location && (
+                <Badge>{viewJob.location}</Badge>
+              )}
+              <Badge>{viewJob.type}</Badge>
+              {viewJob.salary && (
+                <Badge>{viewJob.salary}</Badge>
+              )}
+            </Group>
+            <Divider />
+            <Text fw={500}>Description</Text>
+            <Text size="sm" c="dimmed">{viewJob.description}</Text>
+            {viewJob.requirements && (
+              <>
+                <Divider />
+                <Text fw={500}>Requirements</Text>
+                <Text size="sm" c="dimmed">{viewJob.requirements}</Text>
+              </>
+            )}
+            {viewJob.responsibilities && (
+              <>
+                <Divider />
+                <Text fw={500}>Responsibilities</Text>
+                <Text size="sm" c="dimmed">{viewJob.responsibilities}</Text>
+              </>
+            )}
+            {viewJob.skills && viewJob.skills.length > 0 && (
+              <>
+                <Divider />
+                <Text fw={500}>Skills</Text>
+                <Text size="sm" c="dimmed">{viewJob.skills.join(', ')}</Text>
+              </>
+            )}
+            {viewJob.benefits && viewJob.benefits.length > 0 && (
+              <>
+                <Divider />
+                <Text fw={500}>Benefits</Text>
+                <Text size="sm" c="dimmed">{viewJob.benefits.join(', ')}</Text>
+              </>
+            )}
           </Stack>
         )}
       </Modal>
