@@ -1,0 +1,36 @@
+@media screen and (max-width: 2500px) {
+    .menu {
+        padding-left: 70px;
+    }
+    .other-menu {
+        padding-right: 70px;
+    }
+}
+
+
+@media screen and (max-width: 625px) {
+    #site-logo {
+        width: 135px;
+        margin: auto;
+        margin-top: 25px;
+    }
+
+    .xsm\:gap-20 {
+        gap: 40px !important;
+    }
+}
+
+
+@media screen and (max-width: 425px) {
+    #site-logo {
+        width: 120px;
+        margin: 25px auto auto;
+    }
+    .xsm\:gap-20 {
+        gap: 25px !important;
+    }
+}
+
+/* .main-field {
+    padding-top: 140px;
+} */
