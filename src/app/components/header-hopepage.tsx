@@ -268,57 +268,12 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
                             </Link>
                             <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
                         </li>
-                        <li className="group/menu-item drop-fax lg:relative lg:w-full duration-450">
-                            <button className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 gap-20 sm:gap-10">
-                                <div className="title-field flex w-max relative">
-                                    <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-[&.active]/menu-item:text-primary group-hover/menu-item:text-primary">Corporate</span>
-                                    <Icon 
-                                        name="icon-mini-down" 
-                                        className="text-white group-hover/follow:text-white text-[14px] h-[14px] md:block leading-none duration-350 z-1 block absolute -right-25 top-[50%] translate-y-[-50%]" 
-                                        size={14}
-                                    />
-                                </div>
-                            </button>
-                                            <div className="editor-field overflow-hidden isolate h-0 relative">
-                                                <ul className="sub-list flex gap-20 flex-col md:gap-0 w-full pb-15">
-                                                    <li className="sub-menu group/submenu">
-                                                        <Link href="#" className="menu-item-sub flex items-center justify-start font-light duration-450 relative lg:py-10 px-10 md:px-30" onClick={closeMenu}>
-                                                            <span className="text text-white/50 text-16 sm:text-14 duration-450 group-hover/submenu:text-primary">About</span>
-                                                        </Link>
-                                                    </li>
-                                                    <li className="sub-menu group/submenu">
-                                                        <Link href="#" className="menu-item-sub flex items-center justify-start font-light duration-450 relative lg:py-10 px-10 md:px-30" onClick={closeMenu}>
-                                                            <span className="text text-white/50 text-16 sm:text-14 duration-450 group-hover/submenu:text-primary">Vision & Mission</span>
-                                                        </Link>
-                                                    </li>
-                                                    <li className="sub-menu group/submenu">
-                                                        <Link href="#" className="menu-item-sub flex items-center justify-start font-light duration-450 relative lg:py-10 px-10 md:px-30" onClick={closeMenu}>
-                                                            <span className="text text-white/50 text-16 sm:text-14 duration-450 group-hover/submenu:text-primary">Founders</span>
-                                                        </Link>
-                                                    </li>
-                                                    <li className="sub-menu group/submenu">
-                                                        <Link href="#" className="menu-item-sub flex items-center justify-start font-light duration-450 relative lg:py-10 px-10 md:px-30" onClick={closeMenu}>
-                                                            <span className="text text-white/50 text-16 sm:text-14 duration-450 group-hover/submenu:text-primary">Ethics and Corporate Responsibility</span>
-                                                        </Link>
-                                                    </li>
-                                                    <li className="sub-menu group/submenu">
-                                                        <Link href="#" className="menu-item-sub flex items-center justify-start font-light duration-450 relative lg:py-10 px-10 md:px-30" onClick={closeMenu}>
-                                                            <span className="text text-white/50 text-16 sm:text-14 duration-450 group-hover/submenu:text-primary">Our impact</span>
-                                                        </Link>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
-                                        </li>
+              
                                         <li className="group/menu-item drop-fax lg:relative lg:w-full duration-450">
                                             <Link href="/product" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 gap-20 sm:gap-10" onClick={closeMenu}>
                                                 <div className="title-field flex w-max relative">
                                                     <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-[&.active]/menu-item:text-primary group-hover/menu-item:text-primary">Products</span>
-                                                    <Icon 
-                                                        name="icon-mini-down" 
-                                                        className="text-white group-hover/follow:text-white text-[14px] h-[14px] md:block leading-none duration-350 z-1 block absolute -right-25 top-[50%] translate-y-[-50%]" 
-                                                        size={14}
-                                                    />
+                                                
                                                 </div>
                                             </Link>
                                             <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
@@ -329,12 +284,7 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
                                             </Link>
                                             <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
                                         </li>
-                                        <li className="group/menu-item lg:relative lg:w-full duration-450">
-                                            <Link href="#" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30" onClick={closeMenu}>
-                                                <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-hover/menu-item:text-primary">News</span>
-                                            </Link>
-                                            <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
-                                        </li>
+                                    
                                         <li className="group/menu-item lg:relative lg:w-full duration-450">
                                             <Link href="/contact" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30" onClick={closeMenu}>
                                                 <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-hover/menu-item:text-primary">Contact</span>
