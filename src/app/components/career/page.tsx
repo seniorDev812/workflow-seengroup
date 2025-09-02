@@ -104,7 +104,7 @@ export default function Career() {
                 return;
             }
 
-            const response = await fetch(`${BACKEND_URL}/api/career/jobs?${params}`, {
+            const response = await fetch(`/api/proxy/career/jobs?${params}`, {
                 signal: newController.signal
             });
             
@@ -150,7 +150,7 @@ export default function Career() {
     const fetchJobDetails = async (jobId: string) => {
         console.log('Fetching job details for ID:', jobId);
         try {
-            const response = await fetch(`${BACKEND_URL}/api/career/jobs/${jobId}`);
+            const response = await fetch(`/api/proxy/career/jobs/${jobId}`);
             console.log('Response status:', response.status);
             
             if (!response.ok) {
