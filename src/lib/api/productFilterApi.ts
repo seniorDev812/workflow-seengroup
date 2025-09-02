@@ -79,7 +79,7 @@ export async function fetchFilteredProducts(params: {
       });
     }
 
-    const response = await fetch(`${BACKEND_URL}/api/products/filter?${searchParams.toString()}`);
+    const response = await fetch(`/api/proxy/products/filter?${searchParams.toString()}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -108,7 +108,7 @@ export async function fetchFilteredProducts(params: {
 // Fetch filter categories
 export async function fetchFilterCategories(): Promise<CategoriesResponse> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/products/categories`);
+    const response = await fetch(`/api/proxy/products/categories`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -129,7 +129,7 @@ export async function fetchFilterCategories(): Promise<CategoriesResponse> {
 // Fetch manufacturers
 export async function fetchManufacturers(): Promise<{ success: boolean; data: string[]; error?: string }> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/products/manufacturers`);
+    const response = await fetch(`/api/proxy/products/manufacturers`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -150,7 +150,7 @@ export async function fetchManufacturers(): Promise<{ success: boolean; data: st
 // Search products with autocomplete
 export async function searchProductsAutocomplete(query: string): Promise<{ success: boolean; data: string[]; error?: string }> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/products/search/autocomplete?q=${encodeURIComponent(query)}`);
+    const response = await fetch(`/api/proxy/products/search/autocomplete?q=${encodeURIComponent(query)}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

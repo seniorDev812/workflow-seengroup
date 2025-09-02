@@ -68,7 +68,7 @@ export async function fetchProducts(params: {
     if (params.search) searchParams.append('search', params.search);
     if (params.categoryId) searchParams.append('categoryId', params.categoryId);
 
-    const response = await fetch(`${BACKEND_URL}/api/products?${searchParams.toString()}`);
+    const response = await fetch(`/api/proxy/products?${searchParams.toString()}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -97,7 +97,7 @@ export async function fetchProducts(params: {
 // Fetch categories
 export async function fetchCategories(): Promise<CategoriesResponse> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/categories`);
+    const response = await fetch(`/api/proxy/categories`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -118,7 +118,7 @@ export async function fetchCategories(): Promise<CategoriesResponse> {
 // Fetch single product by ID
 export async function fetchProductById(productId: string): Promise<ProductResponse> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/products/${productId}`);
+    const response = await fetch(`/api/proxy/products/${productId}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
