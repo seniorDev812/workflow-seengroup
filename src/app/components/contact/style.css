@@ -743,6 +743,9 @@
     /* Ensure consistent icon rendering */
     line-height: 1;
     vertical-align: middle;
+    /* Force consistent button appearance */
+    position: relative;
+    overflow: hidden;
 }
 
 .remove-row-btn:hover {
@@ -763,6 +766,20 @@
     /* Force consistent rendering */
     shape-rendering: geometricPrecision;
     text-rendering: optimizeLegibility;
+    /* Ensure all trash icons look identical */
+    vector-effect: non-scaling-stroke;
+    /* Additional consistency rules */
+    dominant-baseline: central;
+    text-anchor: middle;
+}
+
+/* Force all trash icons to be identical */
+.remove-row-btn svg * {
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
 }
 
 /* Table row animations */
@@ -846,6 +863,8 @@
     stroke-linejoin: round !important;
     shape-rendering: geometricPrecision;
     text-rendering: optimizeLegibility;
+    /* Ensure all trash icons look identical */
+    vector-effect: non-scaling-stroke;
 }
 
 .pre-filled-product input[readonly] {

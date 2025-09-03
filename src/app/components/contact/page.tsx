@@ -606,7 +606,7 @@ export default function Contact() {
                                                     </td>
                                                     <td>
                                                         <button type="button" className="remove-row-btn" onClick={() => removeRow(req.id)} aria-label="Remove row">
-                                                            <Icon name="icon-trash-delete" size={14} />
+                                                            <Icon name="icon-trash" size={14} />
                                                         </button>
                                                     </td>
                                                 </tr>
