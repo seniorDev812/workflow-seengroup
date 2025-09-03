@@ -71,7 +71,7 @@ const ProductFilterContent = () => {
               <div className="sei-cta-content">
                 <h4>Need Help?</h4>
                 <p>Contact our sales advisor today for expert guidance on your specific requirements.</p>
-                <a href="#" className="sei-btn sei-btn-primary">Contact Sales</a>
+                <a href="/contact" className="sei-btn sei-btn-primary">Contact Sales</a>
               </div>
             </div>
           </div>

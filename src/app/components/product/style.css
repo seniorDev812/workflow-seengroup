@@ -894,7 +894,10 @@ body {
     .mobile-menu-toggle {
         display: flex !important;
     }
-    
+    .sei-specification-heqadings {
+      display: flex;
+      gap: 15% !important;
+    }
     /* Hide desktop navigation */
     .nav-list {
         position: fixed;
