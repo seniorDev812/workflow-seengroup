@@ -3,7 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Icon from './ui/Icon';
 import './header/style.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
     
 interface HeaderProps {
     headerBgColor?: string;
@@ -11,6 +12,71 @@ interface HeaderProps {
 
 export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
+
+    // Close menu when pathname changes (navigation)
+    useEffect(() => {
+        if (isMenuOpen) {
+            closeMenu();
+        }
+    }, [pathname]);
+
+    // Keyboard support for closing menu
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isMenuOpen) {
+                closeMenu();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isMenuOpen]);
+
+    const closeMenu = () => {
+        setIsMenuOpen(false);
+        // Restore body scroll and position
+        const scrollY = document.body.style.top;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        if (scrollY) {
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+    };
+
+    const handleNavigation = (path: string, resetParams?: Record<string, string>) => {
+        // Close menu first
+        closeMenu();
+        
+        // Check if we're navigating to the same page
+        if (pathname === path) {
+            // If same page, force a refresh to reset state
+            if (resetParams) {
+                const params = new URLSearchParams();
+                Object.entries(resetParams).forEach(([key, value]) => {
+                    params.set(key, value);
+                });
+                router.replace(`${path}?${params.toString()}`);
+            } else {
+                // Force refresh for same page without params
+                router.refresh();
+            }
+        } else {
+            // Different page, normal navigation
+            if (resetParams) {
+                const params = new URLSearchParams();
+                Object.entries(resetParams).forEach(([key, value]) => {
+                    params.set(key, value);
+                });
+                router.push(`${path}?${params.toString()}`);
+            } else {
+                router.push(path);
+            }
+        }
+    };
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -23,15 +89,7 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
             document.body.style.width = '100%';
             document.body.style.overflow = 'hidden';
         } else {
-            // When closing menu, restore body scroll and position
-            const scrollY = document.body.style.top;
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            document.body.style.overflow = '';
-            if (scrollY) {
-                window.scrollTo(0, parseInt(scrollY || '0') * -1);
-            }
+            closeMenu();
         }
     };
 
@@ -106,12 +164,12 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
                                 visibility: isMenuOpen ? 'visible' : 'hidden',
                                 pointerEvents: isMenuOpen ? 'auto' : 'none'
                             }}
-                            onClick={toggleMenu}
+                            onClick={closeMenu}
                         >
                             <div className="content overflow-hidden justify-between md:justify-start flex flex-col gap-[30px] md:gap-0 max-w-[1440px] px-30 mx-auto h-full scrollbar scrollbar-w-[5px] scrollbar-track-rounded-[5px] scrollbar-thumb-rounded-[5px] scrollbar-thumb-main-500 scrollbar-track-main-500/10 overflow-x-hidden overflow-y-auto mobile-menu-list" onClick={(e) => e.stopPropagation()}>
                                 {/* Close button */}
                                 <button 
-                                    onClick={toggleMenu}
+                                    onClick={closeMenu}
                                     style={{paddingTop: "30px"}}
                                     className="absolute top-30 right-30 text-white hover:text-primary duration-350 z-50"
                                 >
@@ -126,32 +184,48 @@ export default function Header({ headerBgColor = 'transparent' }: HeaderProps) {
                                     <ul className="menu-list flex flex-col gap-0 fax-list relative mb-50 xsm:mb-20 wrapper-append">
 
                                                                 <li className="group/menu-item lg:relative lg:w-full duration-450">
-                            <Link href="/" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30">
+                            <button 
+                                onClick={() => handleNavigation('/')}
+                                className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 w-full text-left bg-transparent border-none cursor-pointer"
+                            >
                                 <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-hover/menu-item:text-primary">Home</span>
-                            </Link>
+                            </button>
                             <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
                         </li>
                  
                                         <li className="group/menu-item drop-fax lg:relative lg:w-full duration-450">
-                                            <Link href="/product?view=grid&accordion=auxiliary&auxiliary=Show+All" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 gap-20 sm:gap-10">
+                                            <button 
+                                                onClick={() => handleNavigation('/product', {
+                                                    view: 'grid',
+                                                    accordion: 'auxiliary',
+                                                    auxiliary: 'Show All'
+                                                })}
+                                                className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 gap-20 sm:gap-10 w-full text-left bg-transparent border-none cursor-pointer"
+                                            >
                                                 <div className="title-field flex w-max relative">
                                                     <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-[&.active]/menu-item:text-primary group-hover/menu-item:text-primary">Products</span>
                                                 
                                                 </div>
-                                            </Link>
+                                            </button>
                                             <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
                                         </li>
                                         <li className="group/menu-item lg:relative lg:w-full duration-450">
-                                            <Link href="/career" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30">
+                                            <button 
+                                                onClick={() => handleNavigation('/career')}
+                                                className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 w-full text-left bg-transparent border-none cursor-pointer"
+                                            >
                                                 <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-hover/menu-item:text-primary">Career</span>
-                                            </Link>
+                                            </button>
                                             <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
                                         </li>
                                   
                                         <li className="group/menu-item lg:relative lg:w-full duration-450">
-                                            <Link href="/contact" className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30">
+                                            <button 
+                                                onClick={() => handleNavigation('/contact')}
+                                                className="menu-item-link flex items-center justify-start text-base font-light duration-450 relative py-20 md:py-15 px-10 md:px-30 w-full text-left bg-transparent border-none cursor-pointer"
+                                            >
                                                 <span className="text text-white/50 text-[32px] 2xl:text-28 xl:text-24 lg:text-22 md:text-20 sm:text-18 duration-450 group-hover/menu-item:text-primary">Contact</span>
-                                            </Link>
+                                            </button>
                                             <div className="split w-full h-[1px] relative bg-white/14 flex"></div>
                                         </li>
                                         <li className="group/menu-item lg:relative item-append">

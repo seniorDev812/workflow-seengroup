@@ -38,7 +38,10 @@ import {
   Star,
   Calendar,
   Briefcase,
-  Lock
+  Lock,
+  Filter,
+  Grid3X3,
+  List
 } from 'lucide-react';
 
 interface IconProps {
@@ -96,6 +99,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; size?: n
   'icon-linkedin-2': Linkedin,
   'icon-twitter-2': Twitter,
   'icon-mail-2': Mail,
+  // Product page icons
+  'icon-filter': Filter,
+  'icon-grid': Grid3X3,
+  'icon-list': List,
 };
 
 export default function Icon({ name, className = '', size = 16, style }: IconProps) {

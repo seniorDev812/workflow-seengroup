@@ -72,8 +72,9 @@ export const ProductList: React.FC<ProductListProps> = ({
               alt="Product category overview"
               width={400}
               height={300}
-              className="w-full h-auto"
+              className="sei-product-image"
               priority
+              sizes="(max-width: 768px) 100vw, 400px"
             />
           </div>
           <div className="sei-product-content-d">

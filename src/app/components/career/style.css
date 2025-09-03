@@ -2239,3 +2239,10 @@ body.modal-open {
     }
 }
 
+@media screen and (max-width: 480px) {
+    .jobs-grid {
+        display: flex;
+        flex-direction: column;
+    }
+}
+

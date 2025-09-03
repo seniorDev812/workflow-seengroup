@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { FilterState } from '@/hooks/useProductFilter';
 import { FilterCategory } from '@/lib/api/productFilterApi';
+import Icon from '../ui/Icon';
 
 interface FilterAccordionProps {
   title: string;
@@ -55,7 +56,7 @@ export const FilterAccordion: React.FC<FilterAccordionProps> = ({
             )}
           </div>
           <span className="sei-arrow" aria-hidden="true">
-            <i className="fa fa-angle-down"></i>
+            <Icon name="icon-mini-down" size={16} />
           </span>
         </button>
       
@@ -75,7 +76,7 @@ export const FilterAccordion: React.FC<FilterAccordionProps> = ({
             aria-label={`Search in ${title}`}
           />
           <span className="sei-search-icon sei-sw-part-filter-search-btn" aria-hidden="true">
-            <i className="fa fa-search"></i>
+            <Icon name="icon-search" size={16} />
           </span>
         </div>
         
