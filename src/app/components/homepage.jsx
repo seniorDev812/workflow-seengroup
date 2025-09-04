@@ -96,8 +96,8 @@ export default function HomePage() {
                 // Apply background color based on section visibility
                 if ((aboutInView || worldMapInView || brandsInView) && !bannerInView) {
                     // Gray background for content sections
-                    headerBottom.style.setProperty('--header-bg-color', '#5f5f5f');
-                    headerBottom.style.backgroundColor = '#5f5f5f';
+                    headerBottom.style.setProperty('--header-bg-color', '#383838');
+                    headerBottom.style.backgroundColor = '#383838';
                     headerBottom.style.transition = 'background-color 0.3s ease';
                 } else if (bannerInView) {
                     // Transparent background for banner section

@@ -49,7 +49,7 @@ export default function CareerPage() {
                     background-color: var(--header-bg-color) !important;
                 }
                 .header-bottom.bg-active {
-                    background-color: #5f5f5f !important;
+                    background-color: #383838 !important;
                 }
                 .header-bottom.bg-transparent {
                     background-color: transparent !important;
@@ -124,8 +124,8 @@ export default function CareerPage() {
                     // Job positions or contact section is visible - add background
                     headerBottom.classList.add('bg-active');
                     headerBottom.classList.remove('bg-transparent');
-                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#5f5f5f');
-                    (headerBottom as HTMLElement).style.backgroundColor = '#5f5f5f';
+                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#383838');
+                    (headerBottom as HTMLElement).style.backgroundColor = '#383838';
                 } else if (footerInView && !positionsInView && !contactInView) {
                     // Footer is visible and no content sections are visible - transparent
                     headerBottom.classList.remove('bg-active');
@@ -136,8 +136,8 @@ export default function CareerPage() {
                     // Default state - add background for better readability
                     headerBottom.classList.add('bg-active');
                     headerBottom.classList.remove('bg-transparent');
-                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#5f5f5f');
-                    (headerBottom as HTMLElement).style.backgroundColor = '#5f5f5f';
+                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#383838');
+                    (headerBottom as HTMLElement).style.backgroundColor = '#383838';
                 }
             } catch (error) {
                 console.error('Career header background update failed:', error);

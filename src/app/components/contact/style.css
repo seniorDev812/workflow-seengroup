@@ -512,7 +512,7 @@
 
 /* Header Styles */
 .seen-contact-header {
-    background: #5f5f5f;
+    background: #383838;
     box-shadow: var(--shadow-sm);
     border-bottom: 1px solid var(--border-color);
 }

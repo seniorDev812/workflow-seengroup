@@ -6,10 +6,7 @@ export default function Footer() {
     return (
       <>
       
-<footer className="footer-field w-full relative">
-    <div className="bg w-full h-full absolute top-[50%] left-[50%] bottom-0 pointer-events-none translate-y-[-50%] translate-x-[-50%] z-0" dir="">
-        <img loading="lazy" src="/imgs/footer-bg-2.png" alt="Seen Group | Leading the Way in National Technology: A Productive Meeting with Minister of Industry and Technology Mehmet Fatih Kacır" className="w-full h-full object-center object-cover" />
-    </div>
+<footer className="footer-field w-full relative" style={{backgroundColor: "#383838"}}>
 
     <div className="footer-top md:pt-30 relative overflow-hidden isolate z-1">
         <div className="foot-top-info grid grid-cols-[minmax(0,_5fr)_minmax(0,_260px)_minmax(0,_5fr)] 2xl:grid-cols-[minmax(0,_5fr)_minmax(0,_200px)_minmax(0,_5fr)] 2xl:gap-30 md:grid-cols-1 gap-50 md:gap-0">

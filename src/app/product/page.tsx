@@ -90,8 +90,8 @@ export default function ProductPage() {
                 // Apply background color logic for product page
                 if (productFilterInView) {
                     // Product filter is visible - use gray background
-                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#5f5f5f');
-                    (headerBottom as HTMLElement).style.backgroundColor = '#5f5f5f';
+                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#383838');
+                    (headerBottom as HTMLElement).style.backgroundColor = '#383838';
                     (headerBottom as HTMLElement).style.transition = 'background-color 0.3s ease';
                 } else if (footerInView) {
                     // Footer is visible - make header transparent
@@ -100,8 +100,8 @@ export default function ProductPage() {
                     (headerBottom as HTMLElement).style.transition = 'background-color 0.3s ease';
                 } else {
                     // Default gray background for other sections
-                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#5f5f5f');
-                    (headerBottom as HTMLElement).style.backgroundColor = '#5f5f5f';
+                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#383838');
+                    (headerBottom as HTMLElement).style.backgroundColor = '#383838';
                     (headerBottom as HTMLElement).style.transition = 'background-color 0.3s ease';
                 }
             } catch (error) {

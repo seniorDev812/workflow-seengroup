@@ -48,7 +48,7 @@ export default function ContactPage() {
                     background-color: var(--header-bg-color) !important;
                 }
                 .header-bottom.bg-active {
-                    background-color: #5f5f5f !important;
+                    background-color: #383838 !important;
                 }
                 .header-bottom.bg-transparent {
                     background-color: transparent !important;
@@ -110,11 +110,11 @@ export default function ContactPage() {
 
                 // Apply background color logic for contact page
                 if (mainInView) {
-                    // Main section (main-field home-animation) is visible - always use #5f5f5f
+                    // Main section (main-field home-animation) is visible - always use #383838
                     headerBottom.classList.add('bg-active');
                     headerBottom.classList.remove('bg-transparent');
-                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#5f5f5f');
-                    (headerBottom as HTMLElement).style.backgroundColor = '#5f5f5f';
+                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#383838');
+                    (headerBottom as HTMLElement).style.backgroundColor = '#383838';
                 } else if (footerInView && !mainInView) {
                     // Footer is visible and main section is not - make header transparent
                     headerBottom.classList.remove('bg-active');
@@ -125,8 +125,8 @@ export default function ContactPage() {
                     // Default state - add background for better readability
                     headerBottom.classList.add('bg-active');
                     headerBottom.classList.remove('bg-transparent');
-                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#5f5f5f');
-                    (headerBottom as HTMLElement).style.backgroundColor = '#5f5f5f';
+                    (headerBottom as HTMLElement).style.setProperty('--header-bg-color', '#383838');
+                    (headerBottom as HTMLElement).style.backgroundColor = '#383838';
                 }
             } catch (error) {
                 console.error('Contact header background update failed:', error);
