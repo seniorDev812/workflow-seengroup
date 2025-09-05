@@ -93,7 +93,7 @@ export default function AboutSection() {
                     <div className="text-field w-full border-0 border-solid border-b border-[#DDDDDD] group-hover/counter:border-primary group-[.active]/counter:border-primary duration-350 pb-25 sm:pb-15 h-full">
                       <div className="place-content">
                         <div className="placeholder-counter text-48 xl:text-42 lg:text-36 md:text-30 sm:text-24 xsm:text-20 h-50 xl:h-40 md:h-30 sm:h-25 xsm:h-20 font-medium leading-[1] text-black group-[.active]/counter:text-primary group-hover/counter:text-primary duration-350">
-                          + 60
+                          + 10
                         </div>
                       </div>
                       <p className="text-20 xl:text-18 xsm:text-16 xs:text-10 font-normal text-gray mt-10 sm:mt-10 sm:text-16 !leading-6 duration-350">
