@@ -294,6 +294,40 @@
     display: none;
 }
 
+.seen-contact-form-hint {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.seen-contact-generate-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.seen-contact-generate-btn:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+}
+
+.seen-contact-generate-btn:active {
+    transform: translateY(0);
+}
+
 .seen-contact-error-message.show {
     display: block;
 }

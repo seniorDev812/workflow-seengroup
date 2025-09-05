@@ -68,6 +68,53 @@ interface Notification {
     duration?: number;
 }
 
+// Country to phone number mapping
+const countryPhoneMapping: { [key: string]: { code: string; format: string; example: string } } = {
+    'Turkey': { code: '+90', format: '+90 XXX XXX XX XX', example: '+90 212 438 75 50' },
+    'United States': { code: '+1', format: '+1 (XXX) XXX-XXXX', example: '+1 (555) 123-4567' },
+    'United Kingdom': { code: '+44', format: '+44 XXXX XXX XXX', example: '+44 20 7946 0958' },
+    'Germany': { code: '+49', format: '+49 XXX XXXXXXX', example: '+49 30 12345678' },
+    'France': { code: '+33', format: '+33 X XX XX XX XX', example: '+33 1 42 86 83 26' },
+    'Italy': { code: '+39', format: '+39 XXX XXX XXXX', example: '+39 06 1234 5678' },
+    'Spain': { code: '+34', format: '+34 XXX XXX XXX', example: '+34 91 123 45 67' },
+    'Canada': { code: '+1', format: '+1 (XXX) XXX-XXXX', example: '+1 (416) 123-4567' },
+    'Australia': { code: '+61', format: '+61 X XXXX XXXX', example: '+61 2 1234 5678' },
+    'Japan': { code: '+81', format: '+81 X-XXXX-XXXX', example: '+81 3-1234-5678' },
+    'South Korea': { code: '+82', format: '+82 XX-XXXX-XXXX', example: '+82 2-1234-5678' },
+    'China': { code: '+86', format: '+86 XXX XXXX XXXX', example: '+86 10 1234 5678' },
+    'India': { code: '+91', format: '+91 XXXXX XXXXX', example: '+91 98765 43210' },
+    'Brazil': { code: '+55', format: '+55 XX XXXXX-XXXX', example: '+55 11 91234-5678' },
+    'Mexico': { code: '+52', format: '+52 XX XXXX XXXX', example: '+52 55 1234 5678' },
+    'Netherlands': { code: '+31', format: '+31 X XXXX XXXX', example: '+31 20 123 4567' },
+    'Switzerland': { code: '+41', format: '+41 XX XXX XX XX', example: '+41 44 123 45 67' },
+    'Sweden': { code: '+46', format: '+46 XX XXX XX XX', example: '+46 8 123 45 67' },
+    'Norway': { code: '+47', format: '+47 XXX XX XXX', example: '+47 22 12 34 56' },
+    'Denmark': { code: '+45', format: '+45 XX XX XX XX', example: '+45 12 34 56 78' },
+    'Finland': { code: '+358', format: '+358 XX XXX XXXX', example: '+358 9 123 4567' },
+    'Poland': { code: '+48', format: '+48 XXX XXX XXX', example: '+48 22 123 45 67' },
+    'Czech Republic': { code: '+420', format: '+420 XXX XXX XXX', example: '+420 2 1234 5678' },
+    'Austria': { code: '+43', format: '+43 X XXXXXXX', example: '+43 1 1234567' },
+    'Belgium': { code: '+32', format: '+32 X XXX XX XX', example: '+32 2 123 45 67' },
+    'Portugal': { code: '+351', format: '+351 XXX XXX XXX', example: '+351 21 123 4567' },
+    'Greece': { code: '+30', format: '+30 XXX XXX XXXX', example: '+30 21 1234 5678' },
+    'Other': { code: '+', format: '+XXX XXX XXX XXX', example: '+123 456 789 012' }
+};
+
+// Function to generate a random phone number for a country
+const generatePhoneNumber = (country: string): string => {
+    const mapping = countryPhoneMapping[country];
+    if (!mapping) return '';
+    
+    // Generate random digits based on the format
+    const format = mapping.format;
+    let phoneNumber = format;
+    
+    // Replace X with random digits
+    phoneNumber = phoneNumber.replace(/X/g, () => Math.floor(Math.random() * 10).toString());
+    
+    return phoneNumber;
+};
+
 export default function Contact() {
     const [productData, setProductData] = useState<ProductInfo | null>(null);
     const [formData, setFormData] = useState<FormData>({
@@ -168,7 +215,20 @@ export default function Contact() {
 
     // Handle form input changes
     const handleInputChange = (field: keyof FormData, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        setFormData(prev => {
+            const newFormData = { ...prev, [field]: value };
+            
+            // Auto-generate phone number when country is selected
+            if (field === 'country' && value && value !== '') {
+                const generatedPhone = generatePhoneNumber(value);
+                if (generatedPhone) {
+                    newFormData.phone = generatedPhone;
+                }
+            }
+            
+            return newFormData;
+        });
+        
         // Clear error when user starts typing
         if (errors[field]) {
             setErrors(prev => ({ ...prev, [field]: undefined }));
@@ -526,7 +586,28 @@ export default function Contact() {
                                             required
                                             value={formData.phone}
                                             onChange={(e) => handleInputChange('phone', e.target.value)}
+                                            placeholder={formData.country ? countryPhoneMapping[formData.country]?.example : 'Enter your phone number'}
                                         />
+                                        {formData.country && formData.phone && (
+                                            <div className="seen-contact-form-hint">
+                                                <Icon name="icon-info" size={12} className="mr-1" />
+                                                Auto-generated for {formData.country}. You can edit this number.
+                                                <button
+                                                    type="button"
+                                                    className="seen-contact-generate-btn"
+                                                    onClick={() => {
+                                                        const newPhone = generatePhoneNumber(formData.country);
+                                                        if (newPhone) {
+                                                            setFormData(prev => ({ ...prev, phone: newPhone }));
+                                                        }
+                                                    }}
+                                                    title="Generate a new random phone number"
+                                                >
+                                                    <Icon name="icon-refresh" size={12} />
+                                                    Generate New
+                                                </button>
+                                            </div>
+                                        )}
                                         {errors.phone && <div className="seen-contact-error-message">{errors.phone}</div>}
                                     </div>
 
