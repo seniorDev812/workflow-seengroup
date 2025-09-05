@@ -93,6 +93,7 @@ function ProductsPageContent() {
               aria-label="Search products"
             />
             <Button
+              className="btn btn-secondary"
               variant="light"
               leftSection={<IconRefresh size={16} />}
               onClick={refreshData}
@@ -104,10 +105,9 @@ function ProductsPageContent() {
           </Group>
         </Group>
 
-        <Text c="dimmed" size="sm" mb="sm">
-          {selectedCategory ? selectedCategory.name : "All"} â€” {paginatedProducts.length} items
+        <Text size="sm" mb="sm" className="text-light">
+          {selectedCategory ? selectedCategory.name : "All"} — {paginatedProducts.length} items
         </Text>
-
         <Box pos="relative">
           <LoadingOverlay visible={loading} />
 
@@ -121,7 +121,7 @@ function ProductsPageContent() {
             ) : paginatedProducts.length > 0 ? (
               paginatedProducts.map((product) => (
                 <Grid.Col key={product.id} span={{ base: 12, sm: 6, md: 4 }}>
-                  <ProductCard 
+                  <ProductCard
                     product={{
                       id: product.id,
                       name: product.name || product.description || 'Product',
