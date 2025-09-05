@@ -64,14 +64,29 @@ interface Category {
   updatedAt: string;
 }
 
+interface Subcategory {
+  id: string;
+  name: string;
+  description?: string;
+  slug: string;
+  categoryId: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface Product {
   id: string;
   name: string;
   description?: string;
+  oemNumber?: string;
+  manufacturer?: string;
   price?: string | number; // Can be string (from API) or number
   imageUrl?: string;
   categoryId: string;
+  subcategoryId?: string;
   category?: Category;
+  subcategory?: Subcategory;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -120,6 +135,7 @@ export default function AdminProductsPage() {
   const { trackApiCall, trackUserAction, trackError } = useAdminPerformance('Products Management');
   
   const [categories, setCategories] = useState<Category[]>([]);
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
@@ -145,14 +161,20 @@ export default function AdminProductsPage() {
   const [productForm, setProductForm] = useState<{
     name: string;
     description: string;
+    oemNumber: string;
+    manufacturer: string;
     price: string;
     categoryId: string;
+    subcategoryId: string;
     imageUrl?: string;
   }>({
     name: "",
     description: "",
+    oemNumber: "",
+    manufacturer: "",
     price: "",
     categoryId: "",
+    subcategoryId: "",
     imageUrl: "",
   });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -325,6 +347,25 @@ export default function AdminProductsPage() {
       setCategoriesLoading(false);
     }
   }, [categoriesCache, selectedCategoryId]);
+
+  const loadSubcategories = useCallback(async (categoryId: string) => {
+    try {
+      const response = await fetch(`/api/proxy/admin/categories/${categoryId}/subcategories`, {
+        credentials: 'include',
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const subcats = data.data || [];
+        setSubcategories(subcats);
+      } else {
+        console.error('Failed to load subcategories');
+        setSubcategories([]);
+      }
+    } catch (error) {
+      console.error('Error loading subcategories:', error);
+      setSubcategories([]);
+    }
+  }, []);
 
   // Load products with caching
   const loadProducts = useCallback(async () => {
@@ -538,8 +579,11 @@ export default function AdminProductsPage() {
     setProductForm({
       name: "",
       description: "",
+      oemNumber: "",
+      manufacturer: "",
       price: "",
       categoryId: selectedCategoryId || "",
+      subcategoryId: "",
       imageUrl: "",
     });
     setSelectedImage(null);
@@ -552,12 +596,21 @@ export default function AdminProductsPage() {
     setProductForm({
       name: product.name,
       description: product.description || "",
+      oemNumber: product.oemNumber || "",
+      manufacturer: product.manufacturer || "",
       price: product.price?.toString() || "",
       categoryId: product.categoryId,
+      subcategoryId: product.subcategoryId || "",
       imageUrl: product.imageUrl || "",
     });
     setSelectedImage(null);
     setImagePreview(getDisplayImageUrl(product.imageUrl || ""));
+    
+    // Load subcategories for the product's category
+    if (product.categoryId) {
+      loadSubcategories(product.categoryId);
+    }
+    
     setProductModalOpen(true);
   };
 
@@ -871,9 +924,11 @@ export default function AdminProductsPage() {
                     <Table.Tr>
                       <Table.Th>Image</Table.Th>
                       <Table.Th>Name</Table.Th>
-                      <Table.Th>Description</Table.Th>
+                      <Table.Th>OEM Number</Table.Th>
+                      <Table.Th>Manufacturer</Table.Th>
                       <Table.Th>Price</Table.Th>
                       <Table.Th>Category</Table.Th>
+                      <Table.Th>Subcategory</Table.Th>
                       <Table.Th>Status</Table.Th>
                       <Table.Th></Table.Th>
                     </Table.Tr>
@@ -919,12 +974,22 @@ export default function AdminProductsPage() {
                           </Table.Td>
                           <Table.Td>
                             <Text size="sm" style={{ 
-                              maxWidth: 150, 
+                              maxWidth: 100, 
                               overflow: 'hidden', 
                               textOverflow: 'ellipsis', 
                               whiteSpace: 'nowrap' 
                             }}>
-                              {p.description || '-'}
+                              {p.oemNumber || '-'}
+                            </Text>
+                          </Table.Td>
+                          <Table.Td>
+                            <Text size="sm" style={{ 
+                              maxWidth: 120, 
+                              overflow: 'hidden', 
+                              textOverflow: 'ellipsis', 
+                              whiteSpace: 'nowrap' 
+                            }}>
+                              {p.manufacturer || '-'}
                             </Text>
                           </Table.Td>
                           <Table.Td>
@@ -952,6 +1017,16 @@ export default function AdminProductsPage() {
                               whiteSpace: 'nowrap' 
                             }}>
                               {p.category?.name || '-'}
+                            </Text>
+                          </Table.Td>
+                          <Table.Td>
+                            <Text size="sm" style={{ 
+                              maxWidth: 100, 
+                              overflow: 'hidden', 
+                              textOverflow: 'ellipsis', 
+                              whiteSpace: 'nowrap' 
+                            }}>
+                              {p.subcategory?.name || '-'}
                             </Text>
                           </Table.Td>
                           <Table.Td>
@@ -1043,6 +1118,26 @@ export default function AdminProductsPage() {
             onChange={(e) => setProductForm((s) => ({ ...s, description: getInputValue(e) }))}
             placeholder="Enter product description"
           />
+          
+          <Grid>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <TextInput
+                label="OEM Number"
+                value={productForm.oemNumber || ""}
+                onChange={(e) => setProductForm((s) => ({ ...s, oemNumber: getInputValue(e) }))}
+                placeholder="Enter OEM part number"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <TextInput
+                label="Manufacturer"
+                value={productForm.manufacturer || ""}
+                onChange={(e) => setProductForm((s) => ({ ...s, manufacturer: getInputValue(e) }))}
+                placeholder="Enter manufacturer name"
+              />
+            </Grid.Col>
+          </Grid>
+          
           <Grid>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <TextInput
@@ -1058,9 +1153,28 @@ export default function AdminProductsPage() {
               <Select
                 label="Category"
                 value={productForm.categoryId}
-                onChange={(value) => setProductForm((s) => ({ ...s, categoryId: value || "" }))}
+                onChange={(value) => {
+                  setProductForm((s) => ({ ...s, categoryId: value || "", subcategoryId: "" }));
+                  // Load subcategories when category changes
+                  if (value) {
+                    loadSubcategories(value);
+                  }
+                }}
                 data={categories.map((c) => ({ value: c.id, label: c.name }))}
                 required
+              />
+            </Grid.Col>
+          </Grid>
+          
+          <Grid>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Select
+                label="Subcategory"
+                value={productForm.subcategoryId}
+                onChange={(value) => setProductForm((s) => ({ ...s, subcategoryId: value || "" }))}
+                data={subcategories.map((s) => ({ value: s.id, label: s.name }))}
+                placeholder="Select a subcategory (optional)"
+                disabled={!productForm.categoryId}
               />
             </Grid.Col>
           </Grid>
