@@ -226,11 +226,34 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // In a real app, you would delete from database
+    // Call the backend API to delete the job
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    const response = await fetch(`${backendUrl}/api/admin/career/jobs?id=${jobId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add authentication headers if needed
+        'Authorization': request.headers.get('Authorization') || '',
+        'Cookie': request.headers.get('Cookie') || '',
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: data.error || 'Failed to delete job'
+        },
+        { status: response.status }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      message: 'Job deleted successfully'
+      message: 'Job deleted successfully',
+      data: data.data
     });
 
   } catch (error) {
