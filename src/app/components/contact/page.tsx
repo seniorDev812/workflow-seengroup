@@ -28,6 +28,8 @@ interface FormData {
     country: string;
     phone: string;
     email: string;
+    contactReason: string;
+    message: string;
 }
 
 interface ProductRequirement {
@@ -46,6 +48,8 @@ interface FormErrors {
     country?: string;
     phone?: string;
     email?: string;
+    contactReason?: string;
+    message?: string;
     products?: string;
     submit?: string;
 }
@@ -72,7 +76,9 @@ export default function Contact() {
         company: '',
         country: '',
         phone: '',
-        email: ''
+        email: '',
+        contactReason: '',
+        message: ''
     });
     const [productRequirements, setProductRequirements] = useState<ProductRequirement[]>([]);
     const [errors, setErrors] = useState<FormErrors>({});
@@ -190,6 +196,12 @@ export default function Contact() {
         if (!formData.country) newErrors.country = 'Country is required';
         if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
         if (!formData.email.trim()) newErrors.email = 'Email is required';
+        if (!formData.contactReason) newErrors.contactReason = 'Please select a contact reason';
+        
+        // Message validation for non-sales contacts
+        if (formData.contactReason && formData.contactReason !== 'sales' && !formData.message.trim()) {
+            newErrors.message = 'Please provide details about your inquiry';
+        }
 
         // Format validation
         if (formData.email && !validateEmail(formData.email)) {
@@ -199,20 +211,22 @@ export default function Contact() {
             newErrors.phone = 'Please enter a valid phone number';
         }
 
-        // Product requirements validation
-        if (productRequirements.length === 0) {
-            newErrors.products = 'At least one product is required';
-        } else {
-            const invalidProducts = productRequirements.some(req => 
-                !req.productName.trim() || !req.leadTime || req.quantity < 1
-            );
-            if (invalidProducts) {
-                newErrors.products = 'Please fill in all product details (name, lead time, and quantity)';
-            }
-            
-            // When product is pre-selected, ensure it's the only product requirement
-            if (productData && productRequirements.length > 1) {
-                newErrors.products = 'Only one product can be inquired about at a time';
+        // Product requirements validation (only for sales)
+        if (formData.contactReason === 'sales') {
+            if (productRequirements.length === 0) {
+                newErrors.products = 'At least one product is required';
+            } else {
+                const invalidProducts = productRequirements.some(req => 
+                    !req.productName.trim() || !req.leadTime || req.quantity < 1
+                );
+                if (invalidProducts) {
+                    newErrors.products = 'Please fill in all product details (name, lead time, and quantity)';
+                }
+                
+                // When product is pre-selected, ensure it's the only product requirement
+                if (productData && productRequirements.length > 1) {
+                    newErrors.products = 'Only one product can be inquired about at a time';
+                }
             }
         }
 
@@ -241,7 +255,9 @@ export default function Contact() {
                 country: formData.country,
                 phone: formData.phone,
                 email: formData.email,
-                requirements: JSON.stringify(productRequirements),
+                contactReason: formData.contactReason,
+                message: formData.message,
+                requirements: formData.contactReason === 'sales' ? JSON.stringify(productRequirements) : undefined,
                 productContext: productData ? JSON.stringify(productData) : undefined
             };
 
@@ -301,7 +317,9 @@ export default function Contact() {
                 company: '',
                 country: '',
                 phone: '',
-                email: ''
+                email: '',
+                contactReason: '',
+                message: ''
             });
             setProductRequirements([]);
             setErrors({});
@@ -356,10 +374,9 @@ export default function Contact() {
             <div className="seen-contact-form-container">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="seen-contact-form-header">
-                        <h1 className="seen-contact-form-title">Get Your Quote</h1>
+                        <h1 className="seen-contact-form-title">Contact Us!</h1>
                         <p className="seen-contact-form-subtitle">
-                            Fill out the form below to request a quote for our products and
-                            services. Our team will get back to you within 24 hours.
+                            Fill out the form below to get in touch with us. Our team will get back to you within 24 hours.
                         </p>
                         
                      
@@ -531,12 +548,63 @@ export default function Contact() {
                                 </div>
                             </div>
 
-                            {/* Product Requirements Section */}
+                            {/* Contact Reason Section */}
                             <div className="seen-contact-form-section">
                                 <h2 className="seen-contact-section-title">
-                                    <Icon name="icon-package" className="text-orange-500" size={16} />
-                                    {productData ? 'Product Inquiry' : 'Product Requirements'}
+                                    <Icon name="icon-message" className="text-orange-500" size={16} />
+                                    Contact Reason
                                 </h2>
+                                
+                                <div className="seen-contact-form-group">
+                                    <label htmlFor="contactReason" className="seen-contact-form-label">
+                                        How can we help you? *
+                                    </label>
+                                    <select
+                                        id="contactReason"
+                                        name="contactReason"
+                                        className={`seen-contact-form-select ${errors.contactReason ? 'error' : ''}`}
+                                        required
+                                        value={formData.contactReason}
+                                        onChange={(e) => handleInputChange('contactReason', e.target.value)}
+                                    >
+                                        <option value="">Select a reason</option>
+                                        <option value="sales">Sales - Request a quote for products</option>
+                                        <option value="complaint">Complaint - Report an issue or concern</option>
+                                        <option value="follow-up">Follow Up - Check on existing order/inquiry</option>
+                                        <option value="quality-warranty">Quality & Warranty - Product support or warranty claim</option>
+                                        <option value="financial">Financial - Payment, billing, or financial inquiry</option>
+                                    </select>
+                                    {errors.contactReason && <div className="seen-contact-error-message">{errors.contactReason}</div>}
+                                </div>
+
+                                {/* Conditional Message Field */}
+                                {formData.contactReason && formData.contactReason !== 'sales' && (
+                                    <div className="seen-contact-form-group">
+                                        <label htmlFor="message" className="seen-contact-form-label">
+                                            Please provide details *
+                                        </label>
+                                        <textarea
+                                            id="message"
+                                            name="message"
+                                            className={`seen-contact-form-textarea ${errors.message ? 'error' : ''}`}
+                                            required
+                                            rows={4}
+                                            placeholder={`Please describe your ${formData.contactReason.replace('-', ' ')} in detail...`}
+                                            value={formData.message}
+                                            onChange={(e) => handleInputChange('message', e.target.value)}
+                                        />
+                                        {errors.message && <div className="seen-contact-error-message">{errors.message}</div>}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Product Requirements Section - Only show for Sales */}
+                            {formData.contactReason === 'sales' && (
+                                <div className="seen-contact-form-section">
+                                    <h2 className="seen-contact-section-title">
+                                        <Icon name="icon-package" className="text-orange-500" size={16} />
+                                        {productData ? 'Product Inquiry' : 'Product Requirements'}
+                                    </h2>
                                 
                                 {/* Show context message when product is pre-selected */}
                                 {productData && (
@@ -628,7 +696,8 @@ export default function Contact() {
                                     )}
                                 </div>
                                 {errors.products && <div className="seen-contact-error-message">{errors.products}</div>}
-                            </div>
+                                </div>
+                            )}
 
                             {/* CAPTCHA Section */}
                             <div className="seen-contact-form-section"></div>
