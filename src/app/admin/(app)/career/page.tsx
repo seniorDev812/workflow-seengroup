@@ -31,6 +31,7 @@ import {
   Switch,
   TextInput,
   Select,
+  MultiSelect,
   Textarea,
   Chip
 } from '@mantine/core';
@@ -115,6 +116,30 @@ interface Application {
 export default function CareerManagement() {
   // Performance monitoring
   const { trackApiCall, trackUserAction, trackError } = useAdminPerformance('Career Management');
+  
+  // Predefined options for skills and benefits
+  const skillOptions = [
+    'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular', 'Node.js', 'Python', 'Java', 'C#', 'PHP',
+    'HTML', 'CSS', 'SASS', 'SCSS', 'Tailwind CSS', 'Bootstrap', 'Material-UI', 'Next.js', 'Nuxt.js',
+    'Express.js', 'Django', 'Flask', 'Spring Boot', 'Laravel', 'Symfony', 'Ruby on Rails',
+    'MongoDB', 'PostgreSQL', 'MySQL', 'Redis', 'Elasticsearch', 'GraphQL', 'REST API',
+    'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Jenkins', 'Git', 'GitHub', 'GitLab',
+    'Figma', 'Adobe XD', 'Sketch', 'Photoshop', 'Illustrator', 'Agile', 'Scrum', 'DevOps',
+    'Machine Learning', 'AI', 'Data Science', 'Analytics', 'SEO', 'Marketing', 'Sales', 'Customer Service'
+  ];
+
+  const benefitOptions = [
+    'Health Insurance', 'Dental Insurance', 'Vision Insurance', 'Life Insurance', 'Disability Insurance',
+    '401(k) Matching', 'Retirement Plan', 'Stock Options', 'Equity', 'Performance Bonus',
+    'Remote Work', 'Flexible Hours', 'Work from Home', 'Hybrid Work', 'Flexible Schedule',
+    'Paid Time Off', 'Vacation Days', 'Sick Leave', 'Personal Days', 'Maternity/Paternity Leave',
+    'Professional Development', 'Training Budget', 'Conference Attendance', 'Certification Support',
+    'Gym Membership', 'Wellness Program', 'Mental Health Support', 'Employee Assistance Program',
+    'Free Meals', 'Snacks & Beverages', 'Company Events', 'Team Building', 'Holiday Parties',
+    'Laptop/Equipment', 'Home Office Stipend', 'Internet Allowance', 'Phone Allowance',
+    'Commuter Benefits', 'Parking', 'Transportation', 'Relocation Assistance',
+    'Tuition Reimbursement', 'Student Loan Assistance', 'Childcare Support', 'Pet-friendly Office'
+  ];
   
   const [activeTab, setActiveTab] = useState<string | null>('jobs');
 
@@ -1539,40 +1564,68 @@ export default function CareerManagement() {
 
             <Grid>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <TextInput
+                <MultiSelect
                   label="Required Skills"
-                  placeholder="JavaScript, React, Node.js, TypeScript, AWS"
-                  value={jobForm.skills.join(', ')}
-                  onChange={(e) => setJobForm(prev => ({ ...prev, skills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                  description="Separate multiple skills with commas"
+                  placeholder="Select skills"
+                  data={skillOptions}
+                  value={jobForm.skills}
+                  onChange={(value) => setJobForm(prev => ({ ...prev, skills: value }))}
+                  searchable
+                  description="Select from common skills"
+                  leftSection={<IconCheck size={16} />}
                 />
-                {jobForm.skills.length > 0 && (
-                  <Group gap="xs" mt="xs">
-                    {jobForm.skills.map((skill, index) => (
-                      <Chip key={index} size="sm" variant="light" color="blue">
-                        {skill}
-                      </Chip>
-                    ))}
-                  </Group>
-                )}
+                <TextInput
+                  label="Add Custom Skill"
+                  placeholder="Type a custom skill and press Enter"
+                  mt="xs"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const input = e.target as HTMLInputElement;
+                      const customSkill = input.value.trim();
+                      if (customSkill && !jobForm.skills.includes(customSkill)) {
+                        setJobForm(prev => ({ 
+                          ...prev, 
+                          skills: [...prev.skills, customSkill] 
+                        }));
+                        input.value = '';
+                      }
+                    }
+                  }}
+                  leftSection={<IconPlus size={16} />}
+                />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 6 }}>
-                <TextInput
+                <MultiSelect
                   label="Benefits & Perks"
-                  placeholder="Health Insurance, 401k, Remote Work, Flexible Hours"
-                  value={jobForm.benefits.join(', ')}
-                  onChange={(e) => setJobForm(prev => ({ ...prev, benefits: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-                  description="Separate multiple benefits with commas"
+                  placeholder="Select benefits"
+                  data={benefitOptions}
+                  value={jobForm.benefits}
+                  onChange={(value) => setJobForm(prev => ({ ...prev, benefits: value }))}
+                  searchable
+                  description="Select from common benefits"
+                  leftSection={<IconCheck size={16} />}
                 />
-                {jobForm.benefits.length > 0 && (
-                  <Group gap="xs" mt="xs">
-                    {jobForm.benefits.map((benefit, index) => (
-                      <Chip key={index} size="sm" variant="light" color="green">
-                        {benefit}
-                      </Chip>
-                    ))}
-                  </Group>
-                )}
+                <TextInput
+                  label="Add Custom Benefit"
+                  placeholder="Type a custom benefit and press Enter"
+                  mt="xs"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const input = e.target as HTMLInputElement;
+                      const customBenefit = input.value.trim();
+                      if (customBenefit && !jobForm.benefits.includes(customBenefit)) {
+                        setJobForm(prev => ({ 
+                          ...prev, 
+                          benefits: [...prev.benefits, customBenefit] 
+                        }));
+                        input.value = '';
+                      }
+                    }
+                  }}
+                  leftSection={<IconPlus size={16} />}
+                />
               </Grid.Col>
             </Grid>
           </Paper>

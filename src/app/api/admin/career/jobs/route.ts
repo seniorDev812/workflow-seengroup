@@ -127,7 +127,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, department, location, type, salary, description, requirements, responsibilities, skills, benefits } = body;
+    const { title, department, location, type, salary, description, requirements, responsibilities, postedDate, skills, benefits } = body;
 
     // Validate required fields
     if (!title || !department || !location || !type || !salary || !description) {
@@ -151,7 +151,7 @@ export async function POST(request: Request) {
       description,
       requirements: requirements || '',
       responsibilities: responsibilities || '',
-      postedDate: new Date().toISOString().split('T')[0],
+      postedDate: postedDate || new Date().toISOString().split('T')[0],
       skills: skills || [],
       benefits: benefits || [],
       isActive: true,
