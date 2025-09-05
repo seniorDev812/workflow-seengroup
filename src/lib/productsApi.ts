@@ -105,7 +105,7 @@ export async function fetchProducts(params: {
 // Fetch categories
 export async function fetchCategories(): Promise<CategoriesResponse> {
   try {
-    const response = await fetch(`/api/proxy/categories`);
+    const response = await fetch(`/api/proxy/products/categories`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
