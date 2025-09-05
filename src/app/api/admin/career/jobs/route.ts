@@ -87,29 +87,40 @@ const mockJobs = [
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const department = searchParams.get('department') || '';
-    const location = searchParams.get('location') || '';
-    const type = searchParams.get('type') || '';
-    const status = searchParams.get('status') || 'all';
-
-    // Filter jobs based on criteria
-    const filteredJobs = mockJobs.filter(job => {
-      const matchesDepartment = !department || job.department === department;
-      const matchesLocation = !location || job.location === location;
-      const matchesType = !type || job.type === type;
-      const matchesStatus = status === 'all' || 
-        (status === 'active' && job.isActive) || 
-        (status === 'inactive' && !job.isActive);
-      
-      return matchesDepartment && matchesLocation && matchesType && matchesStatus;
+    
+    // Build query parameters for backend
+    const params = new URLSearchParams();
+    searchParams.forEach((value, key) => {
+      if (value) params.append(key, value);
     });
+
+    // Call the backend API to fetch jobs
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    const response = await fetch(`${backendUrl}/api/admin/career/jobs?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add authentication headers if needed
+        'Authorization': request.headers.get('Authorization') || '',
+        'Cookie': request.headers.get('Cookie') || '',
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: data.error || 'Failed to fetch jobs'
+        },
+        { status: response.status }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      data: {
-        jobs: filteredJobs,
-        total: filteredJobs.length
-      }
+      data: data.data
     });
 
   } catch (error) {
@@ -130,39 +141,57 @@ export async function POST(request: Request) {
     const { title, department, location, type, salary, description, requirements, responsibilities, postedDate, skills, benefits } = body;
 
     // Validate required fields
-    if (!title || !department || !location || !type || !salary || !description) {
+    if (!title || !description || !type) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Title, department, location, type, salary, and description are required'
+          message: 'Title, description, and type are required'
         },
         { status: 400 }
       );
     }
 
-    // In a real app, you would save to database
-    const newJob = {
-      id: Date.now(),
-      title,
-      department,
-      location,
-      type,
-      salary,
-      description,
-      requirements: requirements || '',
-      responsibilities: responsibilities || '',
-      postedDate: postedDate || new Date().toISOString().split('T')[0],
-      skills: skills || [],
-      benefits: benefits || [],
-      isActive: true,
-      applicationsCount: 0
-    };
+    // Call the backend API to create the job
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    const response = await fetch(`${backendUrl}/api/admin/career/jobs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add authentication headers if needed
+        'Authorization': request.headers.get('Authorization') || '',
+        'Cookie': request.headers.get('Cookie') || '',
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        requirements: requirements || '',
+        location: location || '',
+        type,
+        department: department || '',
+        salary: salary || '',
+        responsibilities: responsibilities || '',
+        postedDate: postedDate || new Date().toISOString().split('T')[0],
+        skills: skills || [],
+        benefits: benefits || []
+      })
+    });
 
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: data.error || 'Failed to create job'
+        },
+        { status: response.status }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Job created successfully',
-      data: newJob
+      data: data.data
     });
 
   } catch (error) {
@@ -180,23 +209,50 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const { jobId, updates } = body;
+    const { jobId, ...updates } = body;
 
-    if (!jobId || !updates) {
+    if (!jobId) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Job ID and updates are required'
+          message: 'Job ID is required'
         },
         { status: 400 }
       );
     }
 
-    // In a real app, you would update the database
+    // Call the backend API to update the job
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    const response = await fetch(`${backendUrl}/api/admin/career/jobs`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add authentication headers if needed
+        'Authorization': request.headers.get('Authorization') || '',
+        'Cookie': request.headers.get('Cookie') || '',
+      },
+      body: JSON.stringify({
+        id: jobId,
+        ...updates
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: data.error || 'Failed to update job'
+        },
+        { status: response.status }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      message: 'Job updated successfully'
+      message: 'Job updated successfully',
+      data: data.data
     });
 
   } catch (error) {
