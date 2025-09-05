@@ -443,8 +443,8 @@ export default function AdminProductsPage() {
     setLoading(true);
     try {
       const url = editingCategory 
-        ? `/api/admin/proxy/categories` 
-        : `/api/admin/proxy/categories`;
+        ? `/api/proxy/admin/categories` 
+        : `/api/proxy/admin/categories`;
       const method = editingCategory ? "PATCH" : "POST";
       const body = editingCategory 
         ? { id: editingCategory.id, name: categoryName, description: categoryDescription }
