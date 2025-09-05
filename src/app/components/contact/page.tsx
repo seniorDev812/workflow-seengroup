@@ -100,19 +100,13 @@ const countryPhoneMapping: { [key: string]: { code: string; format: string; exam
     'Other': { code: '+', format: '+XXX XXX XXX XXX', example: '+123 456 789 012' }
 };
 
-// Function to generate a random phone number for a country
-const generatePhoneNumber = (country: string): string => {
+// Function to get country code for a country
+const getCountryCode = (country: string): string => {
     const mapping = countryPhoneMapping[country];
     if (!mapping) return '';
     
-    // Generate random digits based on the format
-    const format = mapping.format;
-    let phoneNumber = format;
-    
-    // Replace X with random digits
-    phoneNumber = phoneNumber.replace(/X/g, () => Math.floor(Math.random() * 10).toString());
-    
-    return phoneNumber;
+    // Return only the country code
+    return mapping.code;
 };
 
 export default function Contact() {
@@ -218,11 +212,11 @@ export default function Contact() {
         setFormData(prev => {
             const newFormData = { ...prev, [field]: value };
             
-            // Auto-generate phone number when country is selected
+            // Auto-fill country code when country is selected
             if (field === 'country' && value && value !== '') {
-                const generatedPhone = generatePhoneNumber(value);
-                if (generatedPhone) {
-                    newFormData.phone = generatedPhone;
+                const countryCode = getCountryCode(value);
+                if (countryCode) {
+                    newFormData.phone = countryCode;
                 }
             }
             
@@ -591,21 +585,7 @@ export default function Contact() {
                                         {formData.country && formData.phone && (
                                             <div className="seen-contact-form-hint">
                                                 <Icon name="icon-info" size={12} className="mr-1" />
-                                                Auto-generated for {formData.country}. You can edit this number.
-                                                <button
-                                                    type="button"
-                                                    className="seen-contact-generate-btn"
-                                                    onClick={() => {
-                                                        const newPhone = generatePhoneNumber(formData.country);
-                                                        if (newPhone) {
-                                                            setFormData(prev => ({ ...prev, phone: newPhone }));
-                                                        }
-                                                    }}
-                                                    title="Generate a new random phone number"
-                                                >
-                                                    <Icon name="icon-refresh" size={12} />
-                                                    Generate New
-                                                </button>
+                                                Country code for {formData.country}. Please add your phone number after the country code.
                                             </div>
                                         )}
                                         {errors.phone && <div className="seen-contact-error-message">{errors.phone}</div>}
