@@ -95,27 +95,23 @@ export default function Footer() {
                                 <div className="other-link-box w-full max-w-[760px] mx-auto">
                                     <ul className="flex space-x-5 sm:space-x-0 sm:space-y-5 mt-130 my-[85px] md:my-[40px] sm:my-[30px] justify-between px-[30px] sm:flex-col sm:items-center sm:gap-10">
                                                                                     <li>
-                                                <a href="./index.html" className="group/link flex items-center duration-450">
+                                                <a href="/" className="group/link flex items-center duration-450">
                                                     <div className="text text-[20px] xl:text-[18px] md:text-[16px] text-[#86888A] leading-tight duration-450 group-hover/link:text-white relative before:absolute before:left-0 before:bottom-0 before:-translate-y-1/2 before:w-0 before:h-[1px] before:bg-white before:duration-450 group-hover/link:before:w-full">HOMEPAGE</div>
                                                 </a>
                                             </li>
+                                                             
                                                                                     <li>
-                                                <a href="#" className="group/link flex items-center duration-450">
-                                                    <div className="text text-[20px] xl:text-[18px] md:text-[16px] text-[#86888A] leading-tight duration-450 group-hover/link:text-white relative before:absolute before:left-0 before:bottom-0 before:-translate-y-1/2 before:w-0 before:h-[1px] before:bg-white before:duration-450 group-hover/link:before:w-full">ABOUT</div>
+                                                <a href="/product" className="group/link flex items-center duration-450">
+                                                    <div className="text text-[20px] xl:text-[18px] md:text-[16px] text-[#86888A] leading-tight duration-450 group-hover/link:text-white relative before:absolute before:left-0 before:bottom-0 before:-translate-y-1/2 before:w-0 before:h-[1px] before:bg-white before:duration-450 group-hover/link:before:w-full">PRODUCTS</div>
                                                 </a>
                                             </li>
                                                                                     <li>
-                                                <a href="#" className="group/link flex items-center duration-450">
-                                                    <div className="text text-[20px] xl:text-[18px] md:text-[16px] text-[#86888A] leading-tight duration-450 group-hover/link:text-white relative before:absolute before:left-0 before:bottom-0 before:-translate-y-1/2 before:w-0 before:h-[1px] before:bg-white before:duration-450 group-hover/link:before:w-full">CATEGORIES</div>
-                                                </a>
-                                            </li>
-                                                                                    <li>
-                                                <a href="./career.html" className="group/link flex items-center duration-450">
+                                                <a href="/career" className="group/link flex items-center duration-450">
                                                     <div className="text text-[20px] xl:text-[18px] md:text-[16px] text-[#86888A] leading-tight duration-450 group-hover/link:text-white relative before:absolute before:left-0 before:bottom-0 before:-translate-y-1/2 before:w-0 before:h-[1px] before:bg-white before:duration-450 group-hover/link:before:w-full">CAREER</div>
                                                 </a>
                                             </li>
                                                                                     <li>
-                                                <a href="./contact.html" className="group/link flex items-center duration-450">
+                                                <a href="/contact" className="group/link flex items-center duration-450">
                                                     <div className="text text-[20px] xl:text-[18px] md:text-[16px] text-[#86888A] leading-tight duration-450 group-hover/link:text-white relative before:absolute before:left-0 before:bottom-0 before:-translate-y-1/2 before:w-0 before:h-[1px] before:bg-white before:duration-450 group-hover/link:before:w-full">CONTACT</div>
                                                 </a>
                                             </li>
