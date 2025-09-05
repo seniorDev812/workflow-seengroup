@@ -156,6 +156,11 @@ export default function AdminProductsPage() {
   const [categoryName, setCategoryName] = useState("");
   const [categoryDescription, setCategoryDescription] = useState("");
 
+  const [subcategoryModalOpen, setSubcategoryModalOpen] = useState(false);
+  const [editingSubcategory, setEditingSubcategory] = useState<Subcategory | null>(null);
+  const [subcategoryName, setSubcategoryName] = useState("");
+  const [subcategoryDescription, setSubcategoryDescription] = useState("");
+
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [productForm, setProductForm] = useState<{
@@ -445,6 +450,15 @@ export default function AdminProductsPage() {
     setCurrentPage(1);
   }, [searchTerm]);
 
+  // Load subcategories when category is selected
+  useEffect(() => {
+    if (selectedCategoryId) {
+      loadSubcategories(selectedCategoryId);
+    } else {
+      setSubcategories([]);
+    }
+  }, [selectedCategoryId, loadSubcategories]);
+
   const refreshAll = async () => {
     setLoading(true);
     try {
@@ -476,6 +490,22 @@ export default function AdminProductsPage() {
     setCategoryName(category.name);
     setCategoryDescription(category.description || "");
     setCategoryModalOpen(true);
+  };
+
+  // Subcategory operations
+  const openCreateSubcategory = () => {
+    if (!selectedCategoryId) return;
+    setEditingSubcategory(null);
+    setSubcategoryName("");
+    setSubcategoryDescription("");
+    setSubcategoryModalOpen(true);
+  };
+
+  const openEditSubcategory = (subcategory: Subcategory) => {
+    setEditingSubcategory(subcategory);
+    setSubcategoryName(subcategory.name);
+    setSubcategoryDescription(subcategory.description || "");
+    setSubcategoryModalOpen(true);
   };
 
   const saveCategory = async () => {
@@ -566,6 +596,98 @@ export default function AdminProductsPage() {
       notifications.show({
         title: "Error",
         message: "Network error deleting category",
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveSubcategory = async () => {
+    if (!subcategoryName.trim() || !selectedCategoryId) return;
+
+    setLoading(true);
+    try {
+      const url = editingSubcategory 
+        ? `/api/proxy/admin/categories` 
+        : `/api/proxy/admin/categories`;
+      const method = editingSubcategory ? "PUT" : "POST";
+      const body = editingSubcategory 
+        ? { id: editingSubcategory.id, name: subcategoryName, description: subcategoryDescription }
+        : { name: subcategoryName, description: subcategoryDescription, categoryId: selectedCategoryId };
+
+      const response = await fetch(url, {
+        method,
+        credentials: 'include',
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
+        notifications.show({
+          title: "Success",
+          message: editingSubcategory ? "Subcategory updated successfully" : "Subcategory created successfully",
+          color: "green",
+        });
+        setSubcategoryModalOpen(false);
+        setSubcategoryName("");
+        setSubcategoryDescription("");
+        setEditingSubcategory(null);
+        await loadSubcategories(selectedCategoryId);
+      } else {
+        const errorData = await response.json();
+        notifications.show({
+          title: "Error",
+          message: errorData.error || "Failed to save subcategory",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Network error saving subcategory",
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteSubcategory = async (subcategoryId: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/proxy/admin/categories`, {
+        method: "DELETE",
+        credentials: 'include',
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: subcategoryId }),
+      });
+
+      if (response.ok) {
+        notifications.show({
+          title: "Success",
+          message: "Subcategory deleted successfully",
+          color: "green",
+        });
+        if (selectedCategoryId) {
+          await loadSubcategories(selectedCategoryId);
+        }
+      } else {
+        const errorData = await response.json();
+        notifications.show({
+          title: "Error",
+          message: errorData.error || "Failed to delete subcategory",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Network error deleting subcategory",
         color: "red",
       });
     } finally {
@@ -837,6 +959,15 @@ export default function AdminProductsPage() {
           </Button>
           <Button 
             leftSection={<IconPlus size={16} />} 
+            onClick={openCreateSubcategory} 
+            disabled={!selectedCategoryId} 
+            color="blue" 
+            size="sm"
+          >
+            New Subcategory
+          </Button>
+          <Button 
+            leftSection={<IconPlus size={16} />} 
             onClick={openCreateProduct} 
             disabled={!selectedCategoryId} 
             size="sm"
@@ -891,7 +1022,50 @@ export default function AdminProductsPage() {
           </Card>
         </Grid.Col>
 
-        <Grid.Col span={{ base: 12, sm: 8, lg: 9 }}>
+        {selectedCategoryId && (
+          <Grid.Col span={{ base: 12, sm: 4, lg: 3 }}>
+            <Card withBorder p="sm" bg="dark.6">
+              <Group mb="sm">
+                <IconCategory size={18} />
+                <Title order={4}>Subcategories</Title>
+              </Group>
+              <ScrollArea style={{ height: 400 }}>
+                <Stack>
+                  {subcategories.length > 0 ? (
+                    subcategories.map((s) => (
+                      <Card key={s.id} withBorder p="sm" bg="dark.6">
+                        <Group justify="space-between" align="center">
+                          <div>
+                            <Text fw={600} size="sm">{s.name}</Text>
+                            {s.description && (
+                              <Text size="xs" c="dimmed">{s.description}</Text>
+                            )}
+                          </div>
+                          <Group gap={4}>
+                            <Tooltip label="Edit">
+                              <ActionIcon variant="subtle" onClick={() => openEditSubcategory(s)} size="sm">
+                                <IconEdit size={14} />
+                              </ActionIcon>
+                            </Tooltip>
+                            <Tooltip label="Delete">
+                              <ActionIcon variant="subtle" color="red" onClick={() => deleteSubcategory(s.id)} size="sm">
+                                <IconTrash size={14} />
+                              </ActionIcon>
+                            </Tooltip>
+                          </Group>
+                        </Group>
+                      </Card>
+                    ))
+                  ) : (
+                    <Text c="dimmed">No subcategories yet.</Text>
+                  )}
+                </Stack>
+              </ScrollArea>
+            </Card>
+          </Grid.Col>
+        )}
+
+        <Grid.Col span={{ base: 12, sm: 8, lg: selectedCategoryId ? 6 : 9 }}>
           <Card withBorder p="md" bg="dark.6">
             <Group justify="space-between" mb="sm" wrap="wrap" gap="xs">
               <Title order={4}>{selectedCategory ? selectedCategory.name : "Products"}</Title>
@@ -1099,6 +1273,29 @@ export default function AdminProductsPage() {
           <Group justify="flex-end">
             <Button variant="light" onClick={() => setCategoryModalOpen(false)}>Cancel</Button>
             <Button onClick={saveCategory} loading={loading}>Save</Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Subcategory Modal */}
+      <Modal opened={subcategoryModalOpen} onClose={() => setSubcategoryModalOpen(false)} title={editingSubcategory ? "Edit Subcategory" : "New Subcategory"}>
+        <Stack>
+          <TextInput
+            label="Subcategory Name"
+            value={subcategoryName}
+            onChange={(e) => setSubcategoryName(getInputValue(e))}
+            placeholder="Enter subcategory name"
+            required
+          />
+          <TextInput
+            label="Subcategory Description (optional)"
+            value={subcategoryDescription}
+            onChange={(e) => setSubcategoryDescription(getInputValue(e))}
+            placeholder="Enter subcategory description"
+          />
+          <Group justify="flex-end">
+            <Button variant="light" onClick={() => setSubcategoryModalOpen(false)}>Cancel</Button>
+            <Button onClick={saveSubcategory} loading={loading}>Save</Button>
           </Group>
         </Stack>
       </Modal>

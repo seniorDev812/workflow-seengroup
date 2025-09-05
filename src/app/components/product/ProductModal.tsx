@@ -1,10 +1,10 @@
 ﻿import React from 'react';
 import Image from 'next/image';
-import { ProductFilter } from '@/lib/api/productFilterApi';
+import { Product } from '@/lib/productsApi';
 import { formatPrice } from '@/lib/utils/productUtils';
 
 interface ProductModalProps {
-  product: ProductFilter | null;
+  product: Product | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -63,10 +63,10 @@ export const ProductModal: React.FC<ProductModalProps> = ({
         <div className="sei-mobile-modal-content">
           <div className="sei-product-modal-info">
             <div className="sei-product-modal-image">
-              {product.image ? (
+              {product.imageUrl ? (
                 <Image 
-                  src={product.image} 
-                  alt={product.description}
+                  src={product.imageUrl} 
+                  alt={product.name || product.description || 'Product'}
                   width={300}
                   height={200}
                   className="w-full h-auto"
@@ -80,28 +80,36 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             </div>
             
             <div className="sei-product-modal-details">
-              <h4 className="sei-product-modal-title">{product.description}</h4>
+              <h4 className="sei-product-modal-title">{product.name || product.description}</h4>
               
               <div className="sei-product-modal-specs">
-                <div className="sei-spec-item">
-                  <span className="sei-spec-label">OEM Number:</span>
-                  <span className="sei-spec-value">{product.oemNumber}</span>
-                </div>
+                {product.oemNumber && (
+                  <div className="sei-spec-item">
+                    <span className="sei-spec-label">OEM Number:</span>
+                    <span className="sei-spec-value">{product.oemNumber}</span>
+                  </div>
+                )}
                 
-                <div className="sei-spec-item">
-                  <span className="sei-spec-label">Manufacturer:</span>
-                  <span className="sei-spec-value">{product.manufacturer}</span>
-                </div>
+                {product.manufacturer && (
+                  <div className="sei-spec-item">
+                    <span className="sei-spec-label">Manufacturer:</span>
+                    <span className="sei-spec-value">{product.manufacturer}</span>
+                  </div>
+                )}
                 
-                <div className="sei-spec-item">
-                  <span className="sei-spec-label">Category:</span>
-                  <span className="sei-spec-value">{product.category}</span>
-                </div>
+                {product.category && (
+                  <div className="sei-spec-item">
+                    <span className="sei-spec-label">Category:</span>
+                    <span className="sei-spec-value">{product.category.name}</span>
+                  </div>
+                )}
                 
-                <div className="sei-spec-item">
-                  <span className="sei-spec-label">Subcategory:</span>
-                  <span className="sei-spec-value">{product.subcategory}</span>
-                </div>
+                {product.subcategory && (
+                  <div className="sei-spec-item">
+                    <span className="sei-spec-label">Subcategory:</span>
+                    <span className="sei-spec-value">{product.subcategory.name}</span>
+                  </div>
+                )}
                 
                 {product.price && (
                   <div className="sei-spec-item">
@@ -113,10 +121,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 )}
               </div>
               
-              <div className="sei-product-modal-description">
-                <h5>Description</h5>
-                <p>{product.description}</p>
-              </div>
+              {product.description && (
+                <div className="sei-product-modal-description">
+                  <h5>Description</h5>
+                  <p>{product.description}</p>
+                </div>
+              )}
             </div>
           </div>
           
@@ -127,10 +137,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 // Contact Sales functionality
                 const productInfo = {
                   id: product.id,
-                  name: product.description,
+                  name: product.name || product.description,
                   oemNumber: product.oemNumber,
                   manufacturer: product.manufacturer,
-                  category: product.category,
+                  category: product.category?.name,
+                  subcategory: product.subcategory?.name,
                   price: product.price
                 };
                 
@@ -166,10 +177,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 // Add to Quote functionality
                 const productInfo = {
                   id: product.id,
-                  name: product.description,
+                  name: product.name || product.description,
                   oemNumber: product.oemNumber,
                   manufacturer: product.manufacturer,
-                  category: product.category,
+                  category: product.category?.name,
+                  subcategory: product.subcategory?.name,
                   price: product.price,
                   quantity: 1
                 };
@@ -189,7 +201,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 localStorage.setItem('product-quote', JSON.stringify(existingQuote));
                 
                 // Show success notification (you can use your preferred notification system)
-                alert(`"${product.description}" added to quote!`);
+                alert(`"${product.name || product.description}" added to quote!`);
                 
                 // Close the modal after action
                 onClose();

@@ -126,9 +126,12 @@ function ProductsPageContent() {
                       id: product.id,
                       name: product.name || product.description || 'Product',
                       description: product.description,
+                      oemNumber: product.oemNumber,
+                      manufacturer: product.manufacturer,
                       price: product.price,
                       imageUrl: product.imageUrl,
-                      category: product.category
+                      category: product.category,
+                      subcategory: product.subcategory
                     }}
                     onClick={() => handleProductClick(product)}
                   />

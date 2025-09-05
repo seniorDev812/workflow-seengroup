@@ -8,9 +8,16 @@ interface ProductCardProps {
     id: string;
     name: string;
     description?: string;
+    oemNumber?: string;
+    manufacturer?: string;
     price?: string | number;
     imageUrl?: string;
     category?: {
+      id: string;
+      name: string;
+      slug: string;
+    };
+    subcategory?: {
       id: string;
       name: string;
       slug: string;
@@ -109,9 +116,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
 
       {/* Product Details */}
       <Stack gap={4}>
-        {product.description && (
+        {product.oemNumber && (
           <Group gap={8} wrap="nowrap">
-            <Text fw={600} size="sm" style={{ minWidth: 100 }}>Description</Text>
+            <Text fw={600} size="sm" style={{ minWidth: 100 }}>OEM</Text>
             <Text 
               size="sm" 
               style={{
@@ -119,9 +126,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap'
               }}
-              title={product.description}
+              title={product.oemNumber}
             >
-              {truncateText(product.description, 30)}
+              {truncateText(product.oemNumber, 25)}
+            </Text>
+          </Group>
+        )}
+        {product.manufacturer && (
+          <Group gap={8} wrap="nowrap">
+            <Text fw={600} size="sm" style={{ minWidth: 100 }}>Brand</Text>
+            <Text 
+              size="sm" 
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+              title={product.manufacturer}
+            >
+              {truncateText(product.manufacturer, 25)}
             </Text>
           </Group>
         )}
@@ -138,6 +161,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
               title={product.category.name}
             >
               {product.category.name}
+            </Text>
+          </Group>
+        )}
+        {product.subcategory && (
+          <Group gap={8} wrap="nowrap">
+            <Text fw={600} size="sm" style={{ minWidth: 100 }}>Type</Text>
+            <Text 
+              size="sm" 
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+              title={product.subcategory.name}
+            >
+              {product.subcategory.name}
             </Text>
           </Group>
         )}

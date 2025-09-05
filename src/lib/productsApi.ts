@@ -4,13 +4,21 @@ export interface Product {
   id: string;
   name: string;
   description?: string;
+  oemNumber?: string;
+  manufacturer?: string;
   price?: string | number; // Can be string (from API) or number
   imageUrl?: string;
   categoryId: string;
+  subcategoryId?: string;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
   category?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  subcategory?: {
     id: string;
     name: string;
     slug: string;
