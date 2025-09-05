@@ -1402,7 +1402,7 @@ export default function CareerManagement() {
       >
         <Stack gap="lg">
           {/* Basic Information Section */}
-          <Paper withBorder p="md" bg="gray.0">
+          <Paper withBorder p="md">
             <Group mb="md">
               <IconFileText size={18} />
               <Text fw={600} size="sm" tt="uppercase" c="dimmed">Basic Information</Text>
@@ -1483,7 +1483,7 @@ export default function CareerManagement() {
           </Paper>
 
           {/* Job Details Section */}
-          <Paper withBorder p="md" bg="gray.0">
+          <Paper withBorder p="md">
             <Group mb="md">
               <IconFileText size={18} />
               <Text fw={600} size="sm" tt="uppercase" c="dimmed">Job Details</Text>
@@ -1531,7 +1531,7 @@ export default function CareerManagement() {
           </Paper>
 
           {/* Skills & Benefits Section */}
-          <Paper withBorder p="md" bg="gray.0">
+          <Paper withBorder p="md">
             <Group mb="md">
               <IconCheck size={18} />
               <Text fw={600} size="sm" tt="uppercase" c="dimmed">Skills & Benefits</Text>
