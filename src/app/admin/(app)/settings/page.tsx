@@ -62,7 +62,7 @@ export default function SettingsPage() {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/proxy/settings`, {
+      const res = await fetch(`/api/proxy/admin/settings`, {
         credentials: 'include',
       });
       if (!res.ok) {
@@ -110,7 +110,7 @@ export default function SettingsPage() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`/api/admin/proxy/settings`, {
+      const res = await fetch(`/api/proxy/admin/settings`, {
         method: 'PUT',
         credentials: 'include',
         headers: { 

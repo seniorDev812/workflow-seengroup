@@ -52,7 +52,7 @@ export default function CategoriesPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/proxy/categories`, {
+      const res = await fetch(`/api/proxy/admin/categories`, {
         credentials: 'include',
       });
       if (!res.ok) {
@@ -117,7 +117,7 @@ export default function CategoriesPage() {
     setLoading(true);
     try {
       if (editing) {
-        const res = await fetch(`/api/admin/proxy/categories`, {
+        const res = await fetch(`/api/proxy/admin/categories`, {
           method: 'PATCH',
           credentials: 'include',
           headers: { 
@@ -142,7 +142,7 @@ export default function CategoriesPage() {
           throw new Error(errorData.error || 'Failed to update category');
         }
       } else {
-        const res = await fetch(`/api/admin/proxy/categories`, {
+        const res = await fetch(`/api/proxy/admin/categories`, {
           method: 'POST',
           credentials: 'include',
           headers: { 
@@ -212,7 +212,7 @@ export default function CategoriesPage() {
     setLoading(true);
     try {
       console.log('Attempting to delete category:', id);
-      const response = await fetch(`/api/admin/proxy/categories?id=${id}`, {
+      const response = await fetch(`/api/proxy/admin/categories?id=${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });

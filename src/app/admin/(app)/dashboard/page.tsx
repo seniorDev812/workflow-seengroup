@@ -107,7 +107,7 @@ export default function AdminDashboard() {
     try {
       const startTime = performance.now();
       
-      const response = await fetchWithRetry(`/api/admin/proxy/dashboard/stats`, {
+      const response = await fetchWithRetry(`/api/proxy/admin/dashboard/stats`, {
         credentials: 'include',
       }, { retries: 2, timeoutMs: 8000 });
 
@@ -313,7 +313,7 @@ export default function AdminDashboard() {
           refreshStats={refreshStats}
           clearCache={() => {
             if (confirm('Are you sure you want to clear the dashboard cache? This will refresh all data.')) {
-              fetch(`/api/admin/proxy/cache/clear`, {
+              fetch(`/api/proxy/admin/cache/clear`, {
                 method: 'POST',
                 credentials: 'include',
               }).then(() => {

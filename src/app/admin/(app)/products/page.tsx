@@ -355,7 +355,7 @@ export default function AdminProductsPage() {
 
   const loadSubcategories = useCallback(async (categoryId: string) => {
     try {
-      const response = await fetch(`/api/proxy/admin/categories/${categoryId}/subcategories`, {
+      const response = await fetch(`/api/proxy/admin/subcategories/${categoryId}`, {
         credentials: 'include',
       });
       if (response.ok) {
@@ -609,8 +609,8 @@ export default function AdminProductsPage() {
     setLoading(true);
     try {
       const url = editingSubcategory 
-        ? `/api/proxy/admin/categories` 
-        : `/api/proxy/admin/categories`;
+        ? `/api/proxy/admin/subcategories` 
+        : `/api/proxy/admin/subcategories`;
       const method = editingSubcategory ? "PUT" : "POST";
       const body = editingSubcategory 
         ? { id: editingSubcategory.id, name: subcategoryName, description: subcategoryDescription }
@@ -658,7 +658,7 @@ export default function AdminProductsPage() {
   const deleteSubcategory = async (subcategoryId: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/proxy/admin/categories`, {
+      const response = await fetch(`/api/proxy/admin/subcategories`, {
         method: "DELETE",
         credentials: 'include',
         headers: { 
