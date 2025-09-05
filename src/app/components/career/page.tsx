@@ -62,10 +62,16 @@ export default function Career() {
     const [abortController, setAbortController] = useState<AbortController | null>(null);
     const [jobCache, setJobCache] = useState<Map<string, any>>(new Map());
     const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [lastCacheTime, setLastCacheTime] = useState<number>(0);
 
     // Generate cache key for current request
     const getCacheKey = (page: number, searchFilters: JobFilters) => {
         return `${page}-${searchFilters.search}-${searchFilters.department}-${searchFilters.location}-${searchFilters.type}`;
+    };
+
+    // Clear cache function
+    const clearJobCache = () => {
+        setJobCache(new Map());
     };
 
     // Fetch jobs from API with caching and request cancellation
@@ -92,16 +98,28 @@ export default function Career() {
             if (filters.location) params.append('location', filters.location);
             if (filters.type) params.append('type', filters.type);
 
-            // Check cache first
+            // Check cache first with timestamp validation
             const cacheKey = getCacheKey(currentPage, { ...filters, search: debouncedSearch });
             if (jobCache.has(cacheKey)) {
                 const cached = jobCache.get(cacheKey);
-                setJobs(cached.data);
-                setTotalPages(cached.pagination.totalPages);
-                setTotalJobs(cached.pagination.total);
-                setLoading(false);
-                trackCacheHit(); // Track cache hit
-                return;
+                const cacheAge = Date.now() - cached.timestamp;
+                const maxCacheAge = 10 * 60 * 1000; // 10 minutes
+                
+                if (cacheAge < maxCacheAge) {
+                    setJobs(cached.data);
+                    setTotalPages(cached.pagination.totalPages);
+                    setTotalJobs(cached.pagination.total);
+                    setLoading(false);
+                    trackCacheHit(); // Track cache hit
+                    return;
+                } else {
+                    // Cache is stale, remove it
+                    setJobCache(prev => {
+                        const newCache = new Map(prev);
+                        newCache.delete(cacheKey);
+                        return newCache;
+                    });
+                }
             }
 
             const response = await fetch(`/api/proxy/career/jobs?${params}`, {
@@ -121,8 +139,12 @@ export default function Career() {
                 setTotalPages(data.pagination.totalPages);
                 setTotalJobs(data.pagination.total);
                 
-                // Cache the result
-                setJobCache(prev => new Map(prev.set(cacheKey, data)));
+                // Cache the result with timestamp
+                setJobCache(prev => new Map(prev.set(cacheKey, {
+                    ...data,
+                    timestamp: Date.now()
+                })));
+                setLastCacheTime(Date.now());
                 
                 // Extract unique values for filters
                 const depts = [...new Set(data.data.map((job: Job) => job.department).filter(Boolean))] as string[];
@@ -212,6 +234,45 @@ export default function Career() {
     useEffect(() => {
         fetchJobs();
     }, [currentPage, debouncedSearch, filters.department, filters.location, filters.type]);
+
+    // Smart cache invalidation - only refresh if page was hidden for more than 2 minutes
+    useEffect(() => {
+        let hiddenTime = 0;
+        
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                hiddenTime = Date.now();
+            } else if (hiddenTime > 0) {
+                const timeHidden = Date.now() - hiddenTime;
+                const timeSinceLastCache = Date.now() - lastCacheTime;
+                
+                // Only refresh if:
+                // 1. Page was hidden for more than 2 minutes, AND
+                // 2. Last cache was more than 5 minutes ago
+                if (timeHidden > 120000 && timeSinceLastCache > 300000) {
+                    clearJobCache();
+                    fetchJobs();
+                }
+                hiddenTime = 0;
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }, [lastCacheTime]);
+
+    // Less frequent periodic refresh - every 15 minutes instead of 5
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // Only refresh if user is actively on the page
+            if (!document.hidden) {
+                clearJobCache();
+                fetchJobs();
+            }
+        }, 15 * 60 * 1000); // Refresh every 15 minutes
+
+        return () => clearInterval(interval);
+    }, []);
 
     // Background slider effect
     useEffect(() => {
