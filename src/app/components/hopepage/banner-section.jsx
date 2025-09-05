@@ -40,7 +40,7 @@ export default function BannerSection() {
               return `<div class="${className} group relative w-[40px] h-[40px] min-h-[40px] min-w-[40px] flex items-center justify-center opacity-100 bg-transparent before:absolute before:w-[8px] [&.swiper-pagination-bullet-active]:before:w-[8px] before:aspect-square before:rounded-full before:bg-[#ffffff25] [&.swiper-pagination-bullet-active]:before:bg-primary duration-300 ease-courier !scale-100">
                 <svg class="opacity-0 duration-300 ease-courier group-[&.swiper-pagination-bullet-active]:opacity-100 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle class="outer" opacity="1" cx="19.5" cy="19.5" r="20" transform="rotate(90 19.5 19.5)" stroke="#FFFFFF20"></circle>
-                  <circle class="inner group-[&.swiper-pagination-bullet-active]:animate-fillCircle" style="stroke-dashoffset: 125; stroke-dasharray: 125" opacity="1" cx="19.5" cy="19.5" r="20" transform="rotate(90 19.5 19.5)" stroke="#F6941E" stroke-width="1px"></circle>
+                  <circle class="inner group-[&.swiper-pagination-bullet-active]:animate-fillCircle" style="stroke-dashoffset: 125; stroke-dasharray: 125" opacity="1" cx="19.5" cy="19.5" r="20" transform="rotate(90 19.5 19.5)" stroke="#6A89A7" stroke-width="1px"></circle>
                 </svg>
               </div>`;
             }

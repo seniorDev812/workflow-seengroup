@@ -2,7 +2,7 @@
 :root {
     --primary-color: #6A89A7;
     --primary-light: #3a5e83;
-    --accent-color: #F6941E;
+    --accent-color: #6A89A7;
     --bg-primary: #FFFFFF;
     --bg-secondary: #F8F9FA;
     --bg-tertiary: #F2F2F2;
@@ -10,7 +10,7 @@
     --text-secondary: #6B7280;
     --text-muted: #9CA3AF;
     --border-color: #E5E7EB;
-    --border-focus: #F6941E;
+    --border-focus: #6A89A7;
     --error-color: #EF4444;
     --success-color: #6A89A7;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

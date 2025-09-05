@@ -3309,7 +3309,7 @@ video {
 
 .border-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .border-transparent {
@@ -3408,7 +3408,7 @@ video {
 
 .bg-primary {
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 .bg-primary\/15 {
@@ -4282,7 +4282,7 @@ video {
 
 .text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .text-red-500 {
@@ -4707,7 +4707,7 @@ video {
 }
 
 .scrollbar-thumb-primary {
-    --scrollbar-thumb: #f6941e !important
+    --scrollbar-thumb: #6A89A7 !important
 }
 
 .scrollbar-track-rounded-\[5px\] {
@@ -5164,7 +5164,7 @@ video {
 .before\:bg-primary:before {
     content: var(--tw-content);
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 .before\:bg-primary-600:before {
@@ -5681,18 +5681,18 @@ video {
 .group\/box:hover .group-hover\/box\:border-primary,
 .group\/counter:hover .group-hover\/counter\:border-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .group\/form:hover .group-hover\/form\:\!border-primary {
     --tw-border-opacity: 1 !important;
-    border-color: rgb(246 148 30/var(--tw-border-opacity)) !important
+    border-color: rgb(118 153 189/var(--tw-border-opacity)) !important
 }
 
 .group\/form:hover .group-hover\/form\:border-primary,
 .group\/item:hover .group-hover\/item\:border-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .group\/menu-item:hover .group-hover\/menu-item\:border-white\/50 {
@@ -5702,7 +5702,7 @@ video {
 .group:hover .group-hover\:border-primary,
 .group\/slide:hover .group-hover\/slide\:border-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .group\/itemer:hover .group-hover\/itemer\:bg-primary\/60 {
@@ -5711,7 +5711,7 @@ video {
 
 .group\/mobile-menu:hover .group-hover\/mobile-menu\:bg-primary {
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 .group\/slide:hover .group-hover\/slide\:bg-white {
@@ -5746,7 +5746,7 @@ video {
 
 .group\/box:hover .group-hover\/box\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/box:hover .group-hover\/box\:text-white,
@@ -5759,7 +5759,7 @@ video {
 .group\/counter:hover .group-hover\/counter\:text-primary,
 .group\/facebook:hover .group-hover\/facebook\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/follow:hover .group-hover\/follow\:text-white {
@@ -5769,7 +5769,7 @@ video {
 
 .group\/form:hover .group-hover\/form\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/icon:hover .group-hover\/icon\:text-white {
@@ -5779,7 +5779,7 @@ video {
 
 .group\/item:hover .group-hover\/item\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/itemer:hover .group-hover\/itemer\:text-black {
@@ -5789,12 +5789,12 @@ video {
 
 .group\/link:hover .group-hover\/link\:\!text-primary {
     --tw-text-opacity: 1 !important;
-    color: rgb(246 148 30/var(--tw-text-opacity)) !important
+    color: rgb(118 153 189/var(--tw-text-opacity)) !important
 }
 
 .group\/link:hover .group-hover\/link\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/link:hover .group-hover\/link\:text-primary\/70 {
@@ -5808,7 +5808,7 @@ video {
 
 .group\/linkedin:hover .group-hover\/linkedin\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/location:hover .group-hover\/location\:text-white {
@@ -5818,7 +5818,7 @@ video {
 
 .group\/menu-item:hover .group-hover\/menu-item\:\!text-primary {
     --tw-text-opacity: 1 !important;
-    color: rgb(246 148 30/var(--tw-text-opacity)) !important
+    color: rgb(118 153 189/var(--tw-text-opacity)) !important
 }
 
 .group\/menu-item:hover .group-hover\/menu-item\:\!text-white {
@@ -5828,7 +5828,7 @@ video {
 
 .group\/menu-item:hover .group-hover\/menu-item\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/navigation:hover .group-hover\/navigation\:text-white {
@@ -5838,7 +5838,7 @@ video {
 
 .group\/submenu:hover .group-hover\/submenu\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/text:hover .group-hover\/text\:text-white {
@@ -5849,7 +5849,7 @@ video {
 .group\/twitter:hover .group-hover\/twitter\:text-primary,
 .group\/whatsapp:hover .group-hover\/whatsapp\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group:hover .group-hover\:text-\[\#fffffff\] {
@@ -5858,7 +5858,7 @@ video {
 
 .group:hover .group-hover\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group:hover .group-hover\:text-primary-600 {
@@ -5940,7 +5940,7 @@ video {
 
 .group\/form:focus .group-focus\/form\:\!border-primary {
     --tw-border-opacity: 1 !important;
-    border-color: rgb(246 148 30/var(--tw-border-opacity)) !important
+    border-color: rgb(118 153 189/var(--tw-border-opacity)) !important
 }
 
 .group\/body.with-header .group-\[\.with-header\]\/body\:top-\[140px\] {
@@ -6047,7 +6047,7 @@ video {
 
 .group.is-active .group-\[\&\.is-active\]\:border-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .group.swiper-button-disabled .group-\[\&\.swiper-button-disabled\]\:border-black\/20 {
@@ -6057,7 +6057,7 @@ video {
 .group\/counter.active .group-\[\.active\]\/counter\:border-primary,
 .group\/list.active .group-\[\.active\]\/list\:border-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .group\/header.page-subs-header .group-\[\.page-subs-header\]\/header\:bg-\[\#000F24\],
@@ -6070,7 +6070,7 @@ video {
 .group.active .group-\[\&\.active\]\:text-primary,
 .group\/menu-item.active .group-\[\&\.active\]\/menu-item\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group.swiper-button-disabled .group-\[\&\.swiper-button-disabled\]\:text-black\/35 {
@@ -6080,7 +6080,7 @@ video {
 .group\/counter.active .group-\[\.active\]\/counter\:text-primary,
 .group\/slide.swiper-slide-active .group-\[\&\.swiper-slide-active\]\/slide\:text-primary {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .group\/list.active .group-\[\.active\]\/list\:text-white,
@@ -6112,7 +6112,7 @@ video {
 
 .group.active .group-\[\&\.active\]\:text-stroke-primary,
 .group\/slide.swiper-slide-active .group-\[\&\.swiper-slide-active\]\/slide\:text-stroke-primary {
-    --tst-text-stroke-color: #f6941e
+    --tst-text-stroke-color: #6A89A7
 }
 
 .group\/slide.swiper-slide-active .group-\[\&\.swiper-slide-active\]\/slide\:before\:w-full:before {
@@ -6129,7 +6129,7 @@ video {
 
 .peer:checked~.peer-checked\:\!border-primary {
     --tw-border-opacity: 1 !important;
-    border-color: rgb(246 148 30/var(--tw-border-opacity)) !important
+    border-color: rgb(118 153 189/var(--tw-border-opacity)) !important
 }
 
 .peer:checked~.peer-checked\:before\:\!scale-100:before {
@@ -6173,7 +6173,7 @@ video {
 
 .peer:hover~.peer-hover\:border-primary {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .peer:hover~.peer-hover\:bg-\[\#F2F2F2\] {
@@ -6228,7 +6228,7 @@ video {
 
 .group\/box:hover .group-hover\/box\:editor-headings\:text-primary :is(:where(h1, h2, h3, h4, h5, h6, th):not(:where([class~=not-editor], [class~=not-editor] *))) {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .editor-h1\:text-\[64px\] :is(:where(h1):not(:where([class~=not-editor], [class~=not-editor] *))) {
@@ -6374,7 +6374,7 @@ video {
 
 .editor-strong\:text-primary :is(:where(strong):not(:where([class~=not-editor], [class~=not-editor] *))) {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .editor-strong\:\[color\:inherit\] :is(:where(strong):not(:where([class~=not-editor], [class~=not-editor] *))) {
@@ -6442,7 +6442,7 @@ video {
 
 .editor-hr\:bg-primary :is(:where(hr):not(:where([class~=not-editor], [class~=not-editor] *))) {
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 .hover\:z-20:hover {
@@ -6468,7 +6468,7 @@ video {
 
 .hover\:border-primary:hover {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .hover\:border-white:hover {
@@ -6483,7 +6483,7 @@ video {
 
 .hover\:bg-primary:hover {
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 .hover\:bg-primary-600:hover {
@@ -6515,7 +6515,7 @@ video {
 
 .hover\:text-primary:hover {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .hover\:text-white:hover {
@@ -6582,12 +6582,12 @@ video {
 .hover\:before\:border-primary:hover:before {
     content: var(--tw-content);
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .focus\:\!border-primary:focus {
     --tw-border-opacity: 1 !important;
-    border-color: rgb(246 148 30/var(--tw-border-opacity)) !important
+    border-color: rgb(118 153 189/var(--tw-border-opacity)) !important
 }
 
 .focus\:border-white\/50:focus {
@@ -7852,7 +7852,7 @@ video {
 
     .md\:border-primary {
         --tw-border-opacity: 1;
-        border-color: rgb(246 148 30/var(--tw-border-opacity))
+        border-color: rgb(118 153 189/var(--tw-border-opacity))
     }
 
     .md\:border-white\/14 {
@@ -8732,7 +8732,7 @@ video {
 
     .sm\:\!text-primary {
         --tw-text-opacity: 1 !important;
-        color: rgb(246 148 30/var(--tw-text-opacity)) !important
+        color: rgb(118 153 189/var(--tw-text-opacity)) !important
     }
 
     .sm\:\!text-white {
@@ -8795,7 +8795,7 @@ video {
     }
 
     .sm\:scrollbar-thumb-primary {
-        --scrollbar-thumb: #f6941e !important
+        --scrollbar-thumb: #6A89A7 !important
     }
 
     .sm\:scrollbar-track-rounded-\[5px\] {
@@ -9265,7 +9265,7 @@ video {
 
 .\[\&\.active\]\:border-primary.active {
     --tw-border-opacity: 1;
-    border-color: rgb(246 148 30/var(--tw-border-opacity))
+    border-color: rgb(118 153 189/var(--tw-border-opacity))
 }
 
 .\[\&\.active\]\:border-white.active {
@@ -9275,7 +9275,7 @@ video {
 
 .\[\&\.active\]\:bg-primary.active {
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 .\[\&\.active\]\:text-\[\#ffffff\].active {
@@ -9655,7 +9655,7 @@ video {
 .\[\&\.swiper-pagination-bullet-active\]\:before\:bg-primary.swiper-pagination-bullet-active:before {
     content: var(--tw-content);
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 .\[\&\.swiper-pagination-bullet-active\]\:before\:bg-white.swiper-pagination-bullet-active:before {
@@ -9767,7 +9767,7 @@ video {
 
 .\[\&_a\:hover\]\:text-primary a:hover {
     --tw-text-opacity: 1;
-    color: rgb(246 148 30/var(--tw-text-opacity))
+    color: rgb(118 153 189/var(--tw-text-opacity))
 }
 
 .\[\&_a\]\:duration-350 a {

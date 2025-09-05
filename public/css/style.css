@@ -4496,7 +4496,7 @@ strong {
 
 .table-wrapper {
     --scrollbar-track: rgba(246, 148, 30, .1);
-    --scrollbar-thumb: #f6941e;
+    --scrollbar-thumb: #6A89A7;
     --scrollbar-track-radius: 5px;
     --scrollbar-thumb-radius: 5px;
     --scrollbar-height: 5px
@@ -4527,7 +4527,7 @@ strong {
 
 .table-wrapper table thead th {
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity));
+    background-color: rgb(118 153 189/var(--tw-bg-opacity));
     font-weight: 700;
     --tw-text-opacity: 1;
     color: rgb(255 255 255/var(--tw-text-opacity))
@@ -5179,7 +5179,7 @@ option {
     height: 1px;
     width: 100%;
     --tw-bg-opacity: 1;
-    background-color: rgb(246 148 30/var(--tw-bg-opacity))
+    background-color: rgb(118 153 189/var(--tw-bg-opacity))
 }
 
 @media (max-width:1680px) {
@@ -5446,7 +5446,7 @@ body::-webkit-scrollbar {
 
 body {
     --scrollbar-track: rgba(246, 148, 30, .1);
-    --scrollbar-thumb: #f6941e;
+    --scrollbar-thumb: #6A89A7;
     --scrollbar-track-radius: 5px;
     --scrollbar-thumb-radius: 5px;
     --scrollbar-width: 5px
@@ -5462,7 +5462,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #f6941e !important;
+    background: #6A89A7 !important;
     border-radius: 5px !important;
     opacity: 1 !important
 }
@@ -5533,8 +5533,8 @@ body {
 .flatpickr-day.startRange.prevMonthDay,
 .flatpickr-day.startRange:focus,
 .flatpickr-day.startRange:hover {
-    background: #f6941e;
-    border: #f6941e
+    background: #6A89A7;
+    border: #6A89A7
 }
 
 input::-webkit-inner-spin-button,
@@ -5564,7 +5564,7 @@ div:has(>.gmnoprint.gm-style-cc) {
 }
 
 #mapCustom [slot=VyEnES-internal-visible-gmp-advanced-markers] svg {
-    fill: #f6941e !important
+    fill: #6A89A7 !important
 }
 
 #mapCustom {
