@@ -203,7 +203,7 @@ export default function CareerManagement() {
         ...(filters.sortOrder && { sortOrder: filters.sortOrder })
       });
 
-      const response = await fetch(`/api/admin/proxy/career/jobs?${params}`, {
+      const response = await fetch(`/api/proxy/admin/career/jobs?${params}`, {
         credentials: 'include',
       });
       
@@ -505,8 +505,8 @@ export default function CareerManagement() {
       const startTime = performance.now();
       
       const url = editingJob 
-        ? `/api/admin/proxy/career/jobs` 
-        : `/api/admin/proxy/career/jobs`;
+        ? `/api/proxy/admin/career/jobs` 
+        : `/api/proxy/admin/career/jobs`;
       const method = editingJob ? 'PUT' : 'POST';
       
       // Prepare job data with proper formatting
@@ -589,7 +589,7 @@ export default function CareerManagement() {
     try {
       const startTime = performance.now();
       
-      const response = await fetch(`/api/admin/proxy/career/jobs?id=${jobId}`, {
+      const response = await fetch(`/api/proxy/admin/career/jobs?id=${jobId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
