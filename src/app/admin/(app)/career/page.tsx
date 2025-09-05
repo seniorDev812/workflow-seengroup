@@ -472,7 +472,33 @@ export default function CareerManagement() {
   };
 
   const saveJob = async () => {
-    if (!jobForm.title.trim() || !jobForm.description.trim()) return;
+    // Enhanced validation
+    if (!jobForm.title.trim()) {
+      notifications.show({
+        title: 'Validation Error',
+        message: 'Job title is required',
+        color: 'red',
+      });
+      return;
+    }
+
+    if (!jobForm.description.trim()) {
+      notifications.show({
+        title: 'Validation Error',
+        message: 'Job description is required',
+        color: 'red',
+      });
+      return;
+    }
+
+    if (!jobForm.type) {
+      notifications.show({
+        title: 'Validation Error',
+        message: 'Job type is required',
+        color: 'red',
+      });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -483,7 +509,21 @@ export default function CareerManagement() {
         : `/api/admin/proxy/career/jobs`;
       const method = editingJob ? 'PUT' : 'POST';
       
-      const jobData = editingJob ? { ...jobForm, id: editingJob.id } : { ...jobForm };
+      // Prepare job data with proper formatting
+      const jobData = {
+        ...jobForm,
+        title: jobForm.title.trim(),
+        description: jobForm.description.trim(),
+        requirements: jobForm.requirements?.trim() || null,
+        location: jobForm.location?.trim() || null,
+        department: jobForm.department?.trim() || null,
+        salary: jobForm.salary?.trim() || null,
+        responsibilities: jobForm.responsibilities?.trim() || null,
+        postedDate: jobForm.postedDate || null,
+        skills: jobForm.skills.filter(skill => skill.trim()),
+        benefits: jobForm.benefits.filter(benefit => benefit.trim()),
+        ...(editingJob && { id: editingJob.id })
+      };
 
       const response = await fetch(url, {
         method,
@@ -498,10 +538,11 @@ export default function CareerManagement() {
       const saveTime = endTime - startTime;
 
       if (response.ok) {
+        const result = await response.json();
         trackUserAction(editingJob ? 'edit_job' : 'create_job', true, saveTime);
         notifications.show({
           title: 'Success',
-          message: `Job ${editingJob ? 'updated' : 'created'} successfully`,
+          message: result.message || `Job ${editingJob ? 'updated' : 'created'} successfully`,
           color: 'green',
         });
         setJobModalOpen(false);
@@ -509,17 +550,28 @@ export default function CareerManagement() {
       } else {
         const errorData = await response.json();
         trackError('save_job', errorData.error || 'Failed to save job');
-        notifications.show({
-          title: 'Error',
-          message: errorData.error || 'Failed to save job',
-          color: 'red',
-        });
+        
+        // Handle validation errors from backend
+        if (errorData.details && Array.isArray(errorData.details)) {
+          const validationErrors = errorData.details.map((detail: any) => detail.msg).join(', ');
+          notifications.show({
+            title: 'Validation Error',
+            message: validationErrors,
+            color: 'red',
+          });
+        } else {
+          notifications.show({
+            title: 'Error',
+            message: errorData.error || 'Failed to save job',
+            color: 'red',
+          });
+        }
       }
     } catch (error) {
       trackError('save_job', 'Network error saving job');
       notifications.show({
         title: 'Error',
-        message: 'Network error saving job',
+        message: 'Network error saving job. Please check your connection and try again.',
         color: 'red',
       });
     } finally {
@@ -1338,121 +1390,208 @@ export default function CareerManagement() {
       <Modal
         opened={jobModalOpen}
         onClose={() => setJobModalOpen(false)}
-        title={editingJob ? "Edit Job" : "Add New Job"}
+        title={
+          <Group>
+            <IconBriefcase size={20} />
+            <Text fw={600}>{editingJob ? "Edit Job" : "Add New Job"}</Text>
+          </Group>
+        }
         size="xl"
         centered
+        scrollAreaComponent={ScrollArea.Autosize}
       >
-        <Stack gap="md">
-          <Grid>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <TextInput
-                label="Job Title"
-                placeholder="e.g., Senior Software Engineer"
-                value={jobForm.title}
-                onChange={(e) => setJobForm(prev => ({ ...prev, title: e.target.value }))}
-                required
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <TextInput
-                label="Department"
-                placeholder="e.g., Engineering, Marketing"
-                value={jobForm.department}
-                onChange={(e) => setJobForm(prev => ({ ...prev, department: e.target.value }))}
-              />
-            </Grid.Col>
-          </Grid>
+        <Stack gap="lg">
+          {/* Basic Information Section */}
+          <Paper withBorder p="md" bg="gray.0">
+            <Group mb="md">
+              <IconFileText size={18} />
+              <Text fw={600} size="sm" tt="uppercase" c="dimmed">Basic Information</Text>
+            </Group>
+            
+            <Grid>
+              <Grid.Col span={{ base: 12, md: 8 }}>
+                <TextInput
+                  label="Job Title"
+                  placeholder="e.g., Senior Software Engineer"
+                  value={jobForm.title}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, title: e.target.value }))}
+                  required
+                  error={!jobForm.title.trim() && "Job title is required"}
+                  leftSection={<IconBriefcase size={16} />}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 4 }}>
+                <Select
+                  label="Job Type"
+                  placeholder="Select job type"
+                  data={[
+                    { value: "FULL_TIME", label: "Full Time" },
+                    { value: "PART_TIME", label: "Part Time" },
+                    { value: "CONTRACT", label: "Contract" },
+                    { value: "INTERNSHIP", label: "Internship" },
+                    { value: "FREELANCE", label: "Freelance" }
+                  ]}
+                  value={jobForm.type}
+                  onChange={(value) => setJobForm(prev => ({ ...prev, type: value || 'FULL_TIME' }))}
+                  required
+                  leftSection={<IconClock size={16} />}
+                />
+              </Grid.Col>
+            </Grid>
 
-          <Grid>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <TextInput
-                label="Location"
-                placeholder="e.g., Remote, New York, etc."
-                value={jobForm.location}
-                onChange={(e) => setJobForm(prev => ({ ...prev, location: e.target.value }))}
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <TextInput
-                label="Salary"
-                placeholder="e.g., $120,000 - $150,000"
-                value={jobForm.salary}
-                onChange={(e) => setJobForm(prev => ({ ...prev, salary: e.target.value }))}
-              />
-            </Grid.Col>
-          </Grid>
+            <Grid>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Department"
+                  placeholder="e.g., Engineering, Marketing, Sales"
+                  value={jobForm.department}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, department: e.target.value }))}
+                  leftSection={<IconBuilding size={16} />}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Location"
+                  placeholder="e.g., Remote, New York, London"
+                  value={jobForm.location}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, location: e.target.value }))}
+                  leftSection={<IconMapPin size={16} />}
+                />
+              </Grid.Col>
+            </Grid>
 
-          <Grid>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <Select
-                label="Job Type"
-                placeholder="Select job type"
-                data={[
-                  { value: "FULL_TIME", label: "Full Time" },
-                  { value: "PART_TIME", label: "Part Time" },
-                  { value: "CONTRACT", label: "Contract" },
-                  { value: "INTERNSHIP", label: "Internship" },
-                  { value: "FREELANCE", label: "Freelance" }
-                ]}
-                value={jobForm.type}
-                onChange={(value) => setJobForm(prev => ({ ...prev, type: value || 'FULL_TIME' }))}
-                required
-              />
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6 }}>
-              <TextInput
-                label="Posted Date"
-                type="date"
-                value={jobForm.postedDate}
-                onChange={(e) => setJobForm(prev => ({ ...prev, postedDate: e.target.value }))}
-              />
-            </Grid.Col>
-          </Grid>
+            <Grid>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Salary Range"
+                  placeholder="e.g., $120,000 - $150,000 or Competitive"
+                  value={jobForm.salary}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, salary: e.target.value }))}
+                  leftSection={<IconCurrencyDollar size={16} />}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Posted Date"
+                  type="date"
+                  value={jobForm.postedDate}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, postedDate: e.target.value }))}
+                  leftSection={<IconCalendar size={16} />}
+                />
+              </Grid.Col>
+            </Grid>
+          </Paper>
 
-          <Textarea
-            label="Job Description"
-            placeholder="Describe the role and responsibilities..."
-            value={jobForm.description}
-            onChange={(e) => setJobForm(prev => ({ ...prev, description: e.target.value }))}
-            rows={4}
-            required
-          />
+          {/* Job Details Section */}
+          <Paper withBorder p="md" bg="gray.0">
+            <Group mb="md">
+              <IconFileText size={18} />
+              <Text fw={600} size="sm" tt="uppercase" c="dimmed">Job Details</Text>
+            </Group>
 
-          <Textarea
-            label="Responsibilities"
-            placeholder="List the key responsibilities..."
-            value={jobForm.responsibilities}
-            onChange={(e) => setJobForm(prev => ({ ...prev, responsibilities: e.target.value }))}
-            rows={3}
-          />
+            <Textarea
+              label="Job Description"
+              placeholder="Provide a comprehensive overview of the role, company culture, and what makes this position unique..."
+              value={jobForm.description}
+              onChange={(e) => setJobForm(prev => ({ ...prev, description: e.target.value }))}
+              rows={4}
+              required
+              error={!jobForm.description.trim() && "Job description is required"}
+              autosize
+              minRows={3}
+              maxRows={6}
+            />
 
-          <Textarea
-            label="Requirements"
-            placeholder="List the requirements and qualifications..."
-            value={jobForm.requirements}
-            onChange={(e) => setJobForm(prev => ({ ...prev, requirements: e.target.value }))}
-            rows={3}
-          />
+            <Grid>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <Textarea
+                  label="Key Responsibilities"
+                  placeholder="• Lead development of new features&#10;• Mentor junior developers&#10;• Collaborate with cross-functional teams"
+                  value={jobForm.responsibilities}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, responsibilities: e.target.value }))}
+                  rows={3}
+                  autosize
+                  minRows={2}
+                  maxRows={4}
+                />
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <Textarea
+                  label="Requirements & Qualifications"
+                  placeholder="• Bachelor's degree in Computer Science&#10;• 5+ years of experience&#10;• Strong problem-solving skills"
+                  value={jobForm.requirements}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, requirements: e.target.value }))}
+                  rows={3}
+                  autosize
+                  minRows={2}
+                  maxRows={4}
+                />
+              </Grid.Col>
+            </Grid>
+          </Paper>
 
-          <TextInput
-            label="Skills (comma separated)"
-            placeholder="e.g., JavaScript, React, Node.js"
-            value={jobForm.skills.join(', ')}
-            onChange={(e) => setJobForm(prev => ({ ...prev, skills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-          />
+          {/* Skills & Benefits Section */}
+          <Paper withBorder p="md" bg="gray.0">
+            <Group mb="md">
+              <IconCheck size={18} />
+              <Text fw={600} size="sm" tt="uppercase" c="dimmed">Skills & Benefits</Text>
+            </Group>
 
-          <TextInput
-            label="Benefits (comma separated)"
-            placeholder="e.g., Health Insurance, 401k, Remote Work"
-            value={jobForm.benefits.join(', ')}
-            onChange={(e) => setJobForm(prev => ({ ...prev, benefits: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
-          />
+            <Grid>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Required Skills"
+                  placeholder="JavaScript, React, Node.js, TypeScript, AWS"
+                  value={jobForm.skills.join(', ')}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, skills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                  description="Separate multiple skills with commas"
+                />
+                {jobForm.skills.length > 0 && (
+                  <Group gap="xs" mt="xs">
+                    {jobForm.skills.map((skill, index) => (
+                      <Chip key={index} size="sm" variant="light" color="blue">
+                        {skill}
+                      </Chip>
+                    ))}
+                  </Group>
+                )}
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 6 }}>
+                <TextInput
+                  label="Benefits & Perks"
+                  placeholder="Health Insurance, 401k, Remote Work, Flexible Hours"
+                  value={jobForm.benefits.join(', ')}
+                  onChange={(e) => setJobForm(prev => ({ ...prev, benefits: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))}
+                  description="Separate multiple benefits with commas"
+                />
+                {jobForm.benefits.length > 0 && (
+                  <Group gap="xs" mt="xs">
+                    {jobForm.benefits.map((benefit, index) => (
+                      <Chip key={index} size="sm" variant="light" color="green">
+                        {benefit}
+                      </Chip>
+                    ))}
+                  </Group>
+                )}
+              </Grid.Col>
+            </Grid>
+          </Paper>
 
-          <Group justify="flex-end" mt="md">
-            <Button variant="light" onClick={() => setJobModalOpen(false)}>
+          {/* Form Actions */}
+          <Group justify="space-between" mt="lg">
+            <Button 
+              variant="light" 
+              onClick={() => setJobModalOpen(false)}
+              leftSection={<IconX size={16} />}
+            >
               Cancel
             </Button>
-            <Button onClick={saveJob}>
+            <Button 
+              onClick={saveJob}
+              leftSection={<IconCheck size={16} />}
+              disabled={!jobForm.title.trim() || !jobForm.description.trim()}
+              loading={loading}
+            >
               {editingJob ? 'Update Job' : 'Create Job'}
             </Button>
           </Group>
