@@ -64,6 +64,7 @@ import {
 } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useAdminPerformance } from '../../hooks/useAdminPerformance';
+import { log } from 'console';
 
 // Add client-side only rendering to prevent hydration issues
 const ClientOnly = ({ children }: { children: React.ReactNode }) => {
@@ -450,6 +451,7 @@ export default function CareerManagement() {
   });
 
   const paginatedApplications = filteredApplications.slice((applicationsPage - 1) * pageSize, applicationsPage * pageSize);
+  console.log(paginatedApplications);
   const totalApplicationPages = Math.ceil(filteredApplications.length / pageSize);
 
   // Job operations
@@ -1146,6 +1148,7 @@ export default function CareerManagement() {
                 </Table.Thead>
                 <Table.Tbody>
                   {paginatedApplications.map((application) => (
+                    
                     <Table.Tr key={application.id}>
                       <Table.Td>
                         <Group>
