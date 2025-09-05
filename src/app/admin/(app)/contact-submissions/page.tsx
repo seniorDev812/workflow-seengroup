@@ -50,7 +50,9 @@ interface ContactSubmission {
   country: string;
   phone: string;
   email: string;
-  requirements: Array<{
+  contactReason: string;
+  message?: string;
+  requirements?: Array<{
     productName: string;
     partNumber: string;
     quantity: string;
@@ -496,6 +498,7 @@ export default function ContactSubmissionsPage() {
                 </Table.Th>
                 <Table.Th>Contact</Table.Th>
                 <Table.Th>Company</Table.Th>
+                <Table.Th>Reason</Table.Th>
                 <Table.Th>Requirements</Table.Th>
                 <Table.Th>Status</Table.Th>
                 <Table.Th>Date</Table.Th>
@@ -533,8 +536,13 @@ export default function ContactSubmissionsPage() {
                     </Stack>
                   </Table.Td>
                   <Table.Td>
+                    <Badge color="blue" variant="light">
+                      {submission.contactReason.charAt(0).toUpperCase() + submission.contactReason.slice(1).replace('-', ' ')}
+                    </Badge>
+                  </Table.Td>
+                  <Table.Td>
                     <Text size="sm">
-                      {submission.requirements.length} item{submission.requirements.length !== 1 ? 's' : ''}
+                      {submission.requirements ? submission.requirements.length : 0} item{(submission.requirements ? submission.requirements.length : 0) !== 1 ? 's' : ''}
                     </Text>
                   </Table.Td>
                   <Table.Td>
@@ -634,25 +642,41 @@ export default function ContactSubmissionsPage() {
             <Divider />
 
             <div>
-              <Text fw={500} size="sm" c="dimmed" mb={8}>Product Requirements</Text>
-              {currentSubmission.requirements.map((req, index) => (
-                <Paper key={index} p="sm" mb="sm" withBorder>
-                  <Grid>
-                    <Grid.Col span={6}>
-                      <Text size="sm" fw={500}>Product: {req.productName}</Text>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
-                      <Text size="sm">Part Number: {req.partNumber}</Text>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
-                      <Text size="sm">Quantity: {req.quantity}</Text>
-                    </Grid.Col>
-                    <Grid.Col span={6}>
-                      <Text size="sm">Lead Time: {req.leadTime}</Text>
-                    </Grid.Col>
-                  </Grid>
-                </Paper>
-              ))}
+              <Text fw={500} size="sm" c="dimmed" mb={8}>Contact Reason</Text>
+              <Text size="sm" mb={16}>
+                {currentSubmission.contactReason.charAt(0).toUpperCase() + currentSubmission.contactReason.slice(1).replace('-', ' ')}
+              </Text>
+              
+              {currentSubmission.message && (
+                <>
+                  <Text fw={500} size="sm" c="dimmed" mb={8}>Message</Text>
+                  <Text size="sm" mb={16}>{currentSubmission.message}</Text>
+                </>
+              )}
+              
+              {currentSubmission.requirements && currentSubmission.requirements.length > 0 && (
+                <>
+                  <Text fw={500} size="sm" c="dimmed" mb={8}>Product Requirements</Text>
+                  {currentSubmission.requirements.map((req, index) => (
+                    <Paper key={index} p="sm" mb="sm" withBorder>
+                      <Grid>
+                        <Grid.Col span={6}>
+                          <Text size="sm" fw={500}>Product: {req.productName}</Text>
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                          <Text size="sm">Part Number: {req.partNumber}</Text>
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                          <Text size="sm">Quantity: {req.quantity}</Text>
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                          <Text size="sm">Lead Time: {req.leadTime}</Text>
+                        </Grid.Col>
+                      </Grid>
+                    </Paper>
+                  ))}
+                </>
+              )}
             </div>
 
             {currentSubmission.notes && (
