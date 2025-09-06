@@ -73,6 +73,9 @@ interface Subcategory {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  _count?: {
+    products: number;
+  };
 }
 
 interface Product {
@@ -160,6 +163,9 @@ export default function AdminProductsPage() {
   const [editingSubcategory, setEditingSubcategory] = useState<Subcategory | null>(null);
   const [subcategoryName, setSubcategoryName] = useState("");
   const [subcategoryDescription, setSubcategoryDescription] = useState("");
+  const [subcategorySearch, setSubcategorySearch] = useState("");
+  const [subcategoryConfirmOpen, setSubcategoryConfirmOpen] = useState(false);
+  const [subcategoryToDelete, setSubcategoryToDelete] = useState<Subcategory | null>(null);
 
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -429,6 +435,16 @@ export default function AdminProductsPage() {
     );
   }, [products, searchTerm]);
 
+  // Filtered subcategories
+  const filteredSubcategories = useMemo(() => {
+    if (!subcategorySearch.trim()) return subcategories;
+    const term = subcategorySearch.toLowerCase();
+    return subcategories.filter(s => 
+      s.name.toLowerCase().includes(term) ||
+      (s.description && s.description.toLowerCase().includes(term))
+    );
+  }, [subcategories, subcategorySearch]);
+
   const paginatedProducts = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
     const end = start + pageSize;
@@ -457,6 +473,8 @@ export default function AdminProductsPage() {
     } else {
       setSubcategories([]);
     }
+    // Reset subcategory search when category changes
+    setSubcategorySearch("");
   }, [selectedCategoryId, loadSubcategories]);
 
   const refreshAll = async () => {
@@ -655,6 +673,11 @@ export default function AdminProductsPage() {
     }
   };
 
+  const openSubcategoryDeleteConfirm = (subcategory: Subcategory) => {
+    setSubcategoryToDelete(subcategory);
+    setSubcategoryConfirmOpen(true);
+  };
+
   const deleteSubcategory = async (subcategoryId: string) => {
     setLoading(true);
     try {
@@ -688,6 +711,49 @@ export default function AdminProductsPage() {
       notifications.show({
         title: "Error",
         message: "Network error deleting subcategory",
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleSubcategoryStatus = async (subcategoryId: string, currentStatus: boolean) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/proxy/admin/subcategories`, {
+        method: "PUT",
+        credentials: 'include',
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          id: subcategoryId, 
+          isActive: !currentStatus 
+        }),
+      });
+
+      if (response.ok) {
+        notifications.show({
+          title: "Success",
+          message: `Subcategory ${!currentStatus ? 'activated' : 'deactivated'} successfully`,
+          color: "green",
+        });
+        if (selectedCategoryId) {
+          await loadSubcategories(selectedCategoryId);
+        }
+      } else {
+        const errorData = await response.json();
+        notifications.show({
+          title: "Error",
+          message: errorData.error || "Failed to update subcategory status",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Network error updating subcategory status",
         color: "red",
       });
     } finally {
@@ -1028,27 +1094,61 @@ export default function AdminProductsPage() {
               <Group mb="sm">
                 <IconCategory size={18} />
                 <Title order={4}>Subcategories</Title>
+                <Badge variant="light" size="sm">{filteredSubcategories.length}</Badge>
               </Group>
+              
+              {/* Search for subcategories */}
+              <TextInput
+                placeholder="Search subcategories..."
+                value={subcategorySearch}
+                onChange={(e) => setSubcategorySearch(getInputValue(e))}
+                leftSection={<IconSearch size={16} />}
+                size="sm"
+                mb="sm"
+              />
+              
               <ScrollArea style={{ height: 400 }}>
                 <Stack>
-                  {subcategories.length > 0 ? (
-                    subcategories.map((s) => (
+                  {filteredSubcategories.length > 0 ? (
+                    filteredSubcategories.map((s) => (
                       <Card key={s.id} withBorder p="sm" bg="dark.6">
-                        <Group justify="space-between" align="center">
-                          <div>
-                            <Text fw={600} size="sm">{s.name}</Text>
+                        <Group justify="space-between" align="flex-start">
+                          <div style={{ flex: 1 }}>
+                            <Group gap="xs" mb={4}>
+                              <Text fw={600} size="sm">{s.name}</Text>
+                              <Badge 
+                                variant={s.isActive ? "filled" : "light"} 
+                                color={s.isActive ? "green" : "gray"}
+                                size="xs"
+                              >
+                                {s.isActive ? "Active" : "Inactive"}
+                              </Badge>
+                            </Group>
                             {s.description && (
-                              <Text size="xs" c="dimmed">{s.description}</Text>
+                              <Text size="xs" c="dimmed" mb={4}>{s.description}</Text>
                             )}
+                            <Text size="xs" c="dimmed">
+                              {s._count?.products || 0} products
+                            </Text>
                           </div>
                           <Group gap={4}>
+                            <Tooltip label="Toggle Status">
+                              <ActionIcon 
+                                variant="subtle" 
+                                onClick={() => toggleSubcategoryStatus(s.id, s.isActive)} 
+                                size="sm"
+                                color={s.isActive ? "orange" : "green"}
+                              >
+                                {s.isActive ? "⏸️" : "▶️"}
+                              </ActionIcon>
+                            </Tooltip>
                             <Tooltip label="Edit">
                               <ActionIcon variant="subtle" onClick={() => openEditSubcategory(s)} size="sm">
                                 <IconEdit size={14} />
                               </ActionIcon>
                             </Tooltip>
                             <Tooltip label="Delete">
-                              <ActionIcon variant="subtle" color="red" onClick={() => deleteSubcategory(s.id)} size="sm">
+                              <ActionIcon variant="subtle" color="red" onClick={() => openSubcategoryDeleteConfirm(s)} size="sm">
                                 <IconTrash size={14} />
                               </ActionIcon>
                             </Tooltip>
@@ -1057,7 +1157,9 @@ export default function AdminProductsPage() {
                       </Card>
                     ))
                   ) : (
-                    <Text c="dimmed">No subcategories yet.</Text>
+                    <Text c="dimmed" ta="center" py="md">
+                      {subcategorySearch ? "No subcategories match your search" : "No subcategories yet."}
+                    </Text>
                   )}
                 </Stack>
               </ScrollArea>
@@ -1463,6 +1565,38 @@ export default function AdminProductsPage() {
               loading={loading}
             >
               Delete Category
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Subcategory Delete Confirmation Modal */}
+      <Modal opened={subcategoryConfirmOpen} onClose={() => setSubcategoryConfirmOpen(false)} title="Confirm Delete Subcategory" centered>
+        <Stack>
+          <Alert color="red" icon={<IconTrash size={16} />}>
+            Are you sure you want to delete the subcategory <strong>&quot;{subcategoryToDelete?.name}&quot;</strong>? 
+            <Text size="sm" mt="xs">
+              This action cannot be undone. The subcategory will be permanently deleted from the database.
+              {subcategoryToDelete?._count?.products && subcategoryToDelete._count.products > 0 && (
+                <Text size="sm" c="orange" mt="xs">
+                  ⚠️ This subcategory has {subcategoryToDelete._count.products} products. Deleting it may affect those products.
+                </Text>
+              )}
+            </Text>
+          </Alert>
+          <Group justify="flex-end">
+            <Button variant="light" onClick={() => setSubcategoryConfirmOpen(false)}>Cancel</Button>
+            <Button 
+              color="red" 
+              onClick={() => {
+                if (subcategoryToDelete) {
+                  deleteSubcategory(subcategoryToDelete.id);
+                  setSubcategoryConfirmOpen(false);
+                }
+              }}
+              loading={loading}
+            >
+              Delete Subcategory
             </Button>
           </Group>
         </Stack>
