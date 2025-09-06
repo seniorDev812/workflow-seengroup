@@ -95,22 +95,9 @@ export const ProductList: React.FC<ProductListProps> = ({
         
         {/* Product Specification Start */}
         <div className="sei-specification-heqadings">
-          <h6 className="sei-comman-s-heading sei-number-text">
-            <i className="fa fa-barcode" aria-hidden="true"></i>
-            OEM NUMBER
-          </h6>
-          <h6 className="sei-comman-s-heading sei-menufacture-text">
-            <i className="fa fa-industry" aria-hidden="true"></i>
-            MANUFACTURER
-          </h6>
-          <h6 className="sei-comman-s-heading sei-discrption-text">
-            <i className="fa fa-info-circle" aria-hidden="true"></i>
-            DESCRIPTION
-          </h6>
-          <h6 className="sei-comman-s-heading sei-price-text">
-            <i className="fa fa-dollar-sign" aria-hidden="true"></i>
-            PRICE
-          </h6>
+          <h6 className="sei-comman-s-heading sei-number-text">OEM NUMBER</h6>
+          <h6 className="sei-comman-s-heading sei-menufacture-text">MANUFACTURER</h6>
+          <h6 className="sei-comman-s-heading sei-discrption-text">DESCRIPTION</h6>
         </div>
         
         <div className="sei-accordion-container">
@@ -129,27 +116,17 @@ export const ProductList: React.FC<ProductListProps> = ({
                   }
                 }}
               >
-                <h6 className="sei-comman-s-heading sei-number-text sei-highlighted-cell">
+                <h6 className="sei-comman-s-heading sei-number-text">
                   <span className="sei-mobile-text-n">OEM Number</span>
-                  <span className="sei-cell-content">
-                    {product.oemNumber || <span className="sei-no-data">N/A</span>}
-                  </span>
+                  {product.oemNumber}
                 </h6>
-                <h6 className="sei-comman-s-heading sei-menufacture-text sei-highlighted-cell">
+                <h6 className="sei-comman-s-heading sei-menufacture-text">
                   <span className="sei-mobile-text-n">Manufacturer</span>
-                  <span className="sei-cell-content">
-                    {product.manufacturer || <span className="sei-no-data">N/A</span>}
-                  </span>
+                  {product.manufacturer}
                 </h6>
                 <h6 className="sei-comman-s-heading sei-discrption-text">
                   <span className="sei-mobile-text-n">Description</span>
-                  <span className="sei-cell-content">{product.description}</span>
-                </h6>
-                <h6 className="sei-comman-s-heading sei-price-text sei-price-cell">
-                  <span className="sei-mobile-text-n">Price</span>
-                  <span className="sei-cell-content sei-price-value">
-                    {product.price ? `$${product.price.toLocaleString()}` : <span className="sei-contact-price">Contact for Price</span>}
-                  </span>
+                  {product.description}
                 </h6>
               </div>
             </div>

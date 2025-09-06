@@ -82,64 +82,38 @@ export const ProductModal: React.FC<ProductModalProps> = ({
             <div className="sei-product-modal-details">
               <h4 className="sei-product-modal-title">{product.name || product.description}</h4>
               
-              {/* Technical Specifications - Highlighted Section */}
-              <div className="sei-product-modal-tech-specs">
-                <h5 className="sei-tech-specs-title">
-                  <i className="fa fa-cog" aria-hidden="true"></i>
-                  Technical Specifications
-                </h5>
-                
-                <div className="sei-tech-specs-grid">
-                  {product.oemNumber && (
-                    <div className="sei-tech-spec-item sei-highlighted">
-                      <span className="sei-tech-spec-label">
-                        <i className="fa fa-barcode" aria-hidden="true"></i>
-                        OEM Number:
-                      </span>
-                      <span className="sei-tech-spec-value">{product.oemNumber}</span>
-                    </div>
-                  )}
-                  
-                  {product.manufacturer && (
-                    <div className="sei-tech-spec-item sei-highlighted">
-                      <span className="sei-tech-spec-label">
-                        <i className="fa fa-industry" aria-hidden="true"></i>
-                        Manufacturer:
-                      </span>
-                      <span className="sei-tech-spec-value">{product.manufacturer}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* General Product Information */}
               <div className="sei-product-modal-specs">
+                {product.oemNumber && (
+                  <div className="sei-spec-item">
+                    <span className="sei-spec-label">OEM Number:</span>
+                    <span className="sei-spec-value">{product.oemNumber}</span>
+                  </div>
+                )}
+                
+                {product.manufacturer && (
+                  <div className="sei-spec-item">
+                    <span className="sei-spec-label">Manufacturer:</span>
+                    <span className="sei-spec-value">{product.manufacturer}</span>
+                  </div>
+                )}
+                
                 {product.category && (
                   <div className="sei-spec-item">
-                    <span className="sei-spec-label">
-                      <i className="fa fa-tags" aria-hidden="true"></i>
-                      Category:
-                    </span>
+                    <span className="sei-spec-label">Category:</span>
                     <span className="sei-spec-value">{product.category.name}</span>
                   </div>
                 )}
                 
                 {product.subcategory && (
                   <div className="sei-spec-item">
-                    <span className="sei-spec-label">
-                      <i className="fa fa-folder" aria-hidden="true"></i>
-                      Subcategory:
-                    </span>
+                    <span className="sei-spec-label">Subcategory:</span>
                     <span className="sei-spec-value">{product.subcategory.name}</span>
                   </div>
                 )}
                 
                 {product.price && (
-                  <div className="sei-spec-item sei-price-item">
-                    <span className="sei-spec-label">
-                      <i className="fa fa-dollar-sign" aria-hidden="true"></i>
-                      Price:
-                    </span>
+                  <div className="sei-spec-item">
+                    <span className="sei-spec-label">Price:</span>
                     <span className="sei-spec-value sei-price">
                       ${formatPrice(product.price)}
                     </span>
@@ -181,12 +155,12 @@ export const ProductModal: React.FC<ProductModalProps> = ({
                 
                 // Option 3: Open WhatsApp with product details (uncomment if you have WhatsApp business)
                 // const whatsappNumber = '1234567890'; // Replace with your WhatsApp number
-                // const message = `Hi, I'm interested in the following product:\n\nProduct: ${product.name || product.description}\nOEM Number: ${product.oemNumber || 'N/A'}\nManufacturer: ${product.manufacturer || 'N/A'}\nCategory: ${product.category?.name || 'N/A'}\nPrice: ${product.price ? `$${formatPrice(product.price)}` : 'Contact for pricing'}\n\nPlease provide more information about availability and pricing.`;
+                // const message = `Hi, I'm interested in ${product.description} (OEM: ${product.oemNumber})`;
                 // window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
                 
                 // Option 4: Open email client (uncomment if you prefer email)
-                // const subject = `Product Inquiry: ${product.name || product.description}`;
-                // const body = `Hello,\n\nI'm interested in the following product:\n\nProduct: ${product.name || product.description}\nOEM Number: ${product.oemNumber || 'N/A'}\nManufacturer: ${product.manufacturer || 'N/A'}\nCategory: ${product.category?.name || 'N/A'}\nSubcategory: ${product.subcategory?.name || 'N/A'}\nPrice: ${product.price ? `$${formatPrice(product.price)}` : 'Contact for pricing'}\n\nPlease provide more information about availability and pricing.\n\nThank you!`;
+                // const subject = `Product Inquiry: ${product.description}`;
+                // const body = `Hello,\n\nI'm interested in the following product:\n\nProduct: ${product.description}\nOEM Number: ${product.oemNumber}\nManufacturer: ${product.manufacturer}\nCategory: ${product.category}\nPrice: ${product.price ? `$${formatPrice(product.price)}` : 'Not specified'}\n\nPlease provide more information about availability and pricing.\n\nThank you!`;
                 // window.open(`mailto:sales@yourcompany.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_self');
                 
                 // Close the modal after action
